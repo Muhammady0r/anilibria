@@ -1,0 +1,15 @@
+#root {
+  padding-bottom: 8px;
+}
+
+* {
+  transition: all 0.2s !important;
+}
+
+body {
+  font-family: pt sans, sans-serif;
+}
+
+.app {
+  grid-template-columns: 5fr 1.5fr;
+}

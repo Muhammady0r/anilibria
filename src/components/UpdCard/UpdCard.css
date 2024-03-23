@@ -1,0 +1,36 @@
+.upd-card {
+  position: relative;
+}
+.upd-card:hover .upd-overlay {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+.upd-card .upd-overlay {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+  transition: all 0.1s;
+  position: absolute;
+  width: 101%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  -webkit-backdrop-filter: blur(2.5px);
+          backdrop-filter: blur(2.5px);
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1;
+}
+.upd-card .upd-overlay h1 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+.upd-card .upd-overlay h2 {
+  text-align: center;
+  margin-top: 4px;
+}
+.upd-card .upd-overlay > a {
+  position: absolute;
+  bottom: 10px;
+}/*# sourceMappingURL=UpdCard.css.map */
