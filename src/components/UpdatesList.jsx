@@ -51,7 +51,7 @@ const UpdatesList = () => {
 
   if (isLoading)
     return (
-      <div className="upd-list flex w-full">
+      <div className="flex w-full">
         <Card className={"w-full flex items-center justify-center"}>
           <l-helix size="45" speed="2.5" color="red"></l-helix>
         </Card>
@@ -59,9 +59,9 @@ const UpdatesList = () => {
     );
 
   return (
-    <div className="upd-list">
+    <div className="h-auto">
       <Card>
-        <CardContent className="flex flex-col p-2 gap-2 relative">
+        <CardContent className="flex flex-col p-2 gap-2 relative overflow-auto">
           <Input
             placeholder={"Найти аниме по названию"}
             onChange={(e) => {
@@ -94,7 +94,7 @@ const UpdatesList = () => {
               })}
           </div>
           {data.data.list.map((title, i) => {
-            return <UpdCard data={title} key={i} />;
+            return <UpdCard data={title} torrentsUrl key={i} />;
           })}
         </CardContent>
       </Card>

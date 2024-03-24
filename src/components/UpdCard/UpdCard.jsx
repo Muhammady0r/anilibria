@@ -4,12 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 
-const UpdCard = ({ data }) => {
+const UpdCard = ({ data, torrentsUrl }) => {
   const nav = useNavigate();
 
-  function truncateString(str, maxLength) {
-    if (str.length > maxLength) {
-      return str.substring(0, maxLength) + "...";
+  function truncateString(str) {
+    if (str.length > 100) {
+      return str.substring(0, 100) + "...";
     } else {
       return str;
     }
@@ -23,15 +23,19 @@ const UpdCard = ({ data }) => {
         className="w-full"
       />
       <div className="upd-overlay flex flex-col items-center text-center p-4">
-        <h1>{data.names.ru}</h1>
+        <h1 className="text-xs">{data.names.ru}</h1>
         <h2>Серия: {data.player.episodes.string}</h2>
-        <p className="mt-4">{truncateString(data.description, 200)}</p>
-        <Link
-          className={`${buttonVariants({ variant: "" })}`}
-          to={`https://www.anilibria.tv${data.torrents.list[0].url}`}
-        >
-          Скачать
-        </Link>
+        {torrentsUrl && (
+          <>
+            <p className="mt-4 text-sm">{truncateString(data.description)}</p>
+            <Link
+              className={`${buttonVariants({ variant: "" })}`}
+              to={`https://www.anilibria.tv${data.torrents.list[0].url}`}
+            >
+              Скачать
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

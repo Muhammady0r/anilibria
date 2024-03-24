@@ -6,9 +6,13 @@ import "ldrs/grid";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const { data, isLoading } = useQuery("youtube", () => {
-    return axios("https://api.anilibria.tv/v3/youtube");
-  });
+  const { data, isLoading, isFetching } = useQuery(
+    "youtube",
+    () => {
+      return axios("https://api.anilibria.tv/v3/youtube");
+    },
+    { refetchInterval: 1000 }
+  );
 
   if (isLoading)
     return (

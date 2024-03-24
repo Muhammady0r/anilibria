@@ -10,9 +10,9 @@ const Header = () => {
         <NavLink className="header__link" to={"/"}>
           Главная
         </NavLink>
-        <NavLink className="header__link" to={"/catalog"}>
+        {/* <NavLink className="header__link" to={"/catalog"}>
           Релизы
-        </NavLink>
+        </NavLink> */}
         <NavLink className="header__link" to={"/schedule"}>
           Расписание
         </NavLink>
@@ -26,9 +26,6 @@ const Header = () => {
         >
           Приложение
         </Link>
-        <NavLink className="header__link" to={"/team"}>
-          Команда
-        </NavLink>
         <NavLink className="header__link" to={"/donate"}>
           Поддержать проект
         </NavLink>
