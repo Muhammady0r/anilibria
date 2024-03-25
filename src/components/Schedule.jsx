@@ -42,7 +42,6 @@ const Schedule = () => {
   ];
 
   useEffect(() => {
-    console.log(params.get("toDay"));
     if (params.get("toDay") != undefined && isLoading == false) {
       dayRefs[params.get("toDay")].current.scrollIntoView({
         behavior: "smooth",

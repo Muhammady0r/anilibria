@@ -52,9 +52,7 @@ const Title = () => {
   const { data, isLoading, isFetching, refetch } = useQuery(
     "title-full",
     () => {
-      if (window.location.pathname == "/random")
-        return axios("https://api.anilibria.tv/v3/title/random");
-      else return axios(`https://api.anilibria.tv/v3/title?code=${param.code}`);
+      return axios(`https://api.anilibria.tv/v3/title?code=${param.code}`);
     },
     {
       refetchOnWindowFocus: false,
@@ -69,7 +67,7 @@ const Title = () => {
   }, [param]);
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || window.location.pathname == "/random") return;
 
     if (localStorage.getItem(`${data.data.id}`) == null) {
       localStorage.setItem(`${data.data.id}`, 0);
@@ -77,33 +75,72 @@ const Title = () => {
 
     setEpisode(+localStorage.getItem(`${data.data.id}`));
 
-    let array = [];
-    for (let i = 1; i <= data.data.player.episodes.last; i++) {
-      array.push(
-        "https://" + data.data.player.host + data.data.player.list[i].hls.fhd
-      );
-    }
+    setEpisodes1080(
+      Object.keys(data.data.player.list).map((i) => {
+        return (
+          "https://" + data.data.player.host + data.data.player.list[i].hls.fhd
+        );
+      })
+    );
 
-    setEpisodes1080(array);
+    setEpisodes720(
+      Object.keys(data.data.player.list).map((i) => {
+        return (
+          "https://" + data.data.player.host + data.data.player.list[i].hls.hd
+        );
+      })
+    );
 
-    array = [];
-    for (let i = 1; i <= data.data.player.episodes.last; i++) {
-      array.push(
-        "https://" + data.data.player.host + data.data.player.list[i].hls.hd
-      );
-    }
+    setEpisodes(episodes720);
 
-    setEpisodes(array);
-    setEpisodes720(array);
+    setEpisodes480(
+      Object.keys(data.data.player.list).map((i) => {
+        return (
+          "https://" + data.data.player.host + data.data.player.list[i].hls.sd
+        );
+      })
+    );
 
-    array = [];
-    for (let i = 1; i <= data.data.player.episodes.last; i++) {
-      array.push(
-        "https://" + data.data.player.host + data.data.player.list[i].hls.sd
-      );
-    }
+    // let array = [];
+    // for (
+    //   let i = data.data.player.episodes.first;
+    //   i <= data.data.player.episodes.last;
+    //   i++
+    // ) {
+    //   console.log(i);
+    //   array.push(
+    //     "https://" + data.data.player.host + data.data.player.list[i].hls.fhd
+    //   );
+    // }
 
-    setEpisodes480(array);
+    // setEpisodes1080(array);
+
+    // array = [];
+    // for (
+    //   let i = data.data.player.episodes.first;
+    //   i <= data.data.player.episodes.last;
+    //   i++
+    // ) {
+    //   array.push(
+    //     "https://" + data.data.player.host + data.data.player.list[i].hls.hd
+    //   );
+    // }
+
+    // setEpisodes(array);
+    // setEpisodes720(array);
+
+    // array = [];
+    // for (
+    //   let i = data.data.player.episodes.first;
+    //   i <= data.data.player.episodes.last;
+    //   i++
+    // ) {
+    //   array.push(
+    //     "https://" + data.data.player.host + data.data.player.list[i].hls.sd
+    //   );
+    // }
+
+    // setEpisodes480(array);
   }, [data]);
 
   useEffect(() => {

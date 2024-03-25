@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import Schedule from "./components/Schedule";
 import Title from "./components/Title";
 import { useEffect } from "react";
+import Random from "./components/Random";
 
 function App() {
   return (
@@ -47,8 +48,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/release/:code" element={<Title />} />
-            <Route path="/random" element={<Title />} />
+            <Route path="/random" element={<Random />} />
             <Route path="/donate" element={<Donate />} />
+            <Route path="/fetch-titles" element={<Fetch />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
