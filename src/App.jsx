@@ -10,6 +10,8 @@ import Releases from "./components/Releases";
 import Donate from "./components/Donate";
 import Footer from "./components/Footer";
 import Schedule from "./components/Schedule";
+import Title from "./components/Title";
+import { useEffect } from "react";
 
 function App() {
   return (
@@ -19,9 +21,15 @@ function App() {
         Офф{" "}
         <a
           href="https://anilibria.tv"
-          className="text-cyan-600"
+          className="text-blue-500"
           target="_blank"
         >
+          Anilibria.tv
+        </a>
+      </h1>
+      <h1 className="absolute top-2 left-2 text-xs text-center z-50">
+        Фан копия сайта{" "}
+        <a href="https://anilibria.tv" className="text-blue-500">
           Anilibria.tv
         </a>
       </h1>
@@ -38,6 +46,8 @@ function App() {
           <div className="w-full mb-2"></div>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/release/:code" element={<Title />} />
+            <Route path="/random" element={<Title />} />
             <Route path="/donate" element={<Donate />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="*" element={<PageNotFound />} />

@@ -59,7 +59,7 @@ const UpdatesList = () => {
     );
 
   return (
-    <div className="h-auto">
+    <div className="h-auto min-w-[300px]">
       <Card>
         <CardContent className="flex flex-col p-2 gap-2 relative overflow-auto">
           <Input

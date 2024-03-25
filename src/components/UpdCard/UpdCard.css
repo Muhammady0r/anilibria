@@ -14,7 +14,6 @@
   opacity: 0;
   transform: scale(1.1);
   pointer-events: none;
-  transition: all 0.1s;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -27,12 +26,10 @@
   z-index: 1;
 }
 .upd-card .upd-overlay h1 {
-  text-align: center;
   font-size: 18px;
   font-weight: 600;
 }
 .upd-card .upd-overlay h2 {
-  text-align: center;
   margin-top: 4px;
 }
 .upd-card .upd-overlay > a {

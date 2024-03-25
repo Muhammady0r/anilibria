@@ -3,6 +3,7 @@ import React from "react";
 import { useQuery } from "react-query";
 
 import "ldrs/grid";
+
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -22,13 +23,13 @@ const Home = () => {
     );
 
   return (
-    <div className="grid grid-cols-2 gap-2 p-2">
+    <div className="grid grid-cols-2 gap-2 p-2 transition-all">
       {data.data.list.map((video, i) => {
         return (
           <Link
             to={`https://www.youtube.com/watch?v=${video.youtube_id}`}
             key={i}
-            className="opacity-60 hover:opacity-100 rounded overflow-hidden"
+            className="opacity-60 transition-all hover:opacity-100 rounded overflow-hidden"
             target="_blank"
           >
             <img

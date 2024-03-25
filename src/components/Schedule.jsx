@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 
 import {
@@ -13,8 +13,10 @@ import {
 import "ldrs/grid";
 import axios from "axios";
 import UpdCard from "./UpdCard/UpdCard";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const Schedule = () => {
+  const [params, setParams] = useSearchParams();
   const { data, isLoading, isFetching } = useQuery("schedule", () => {
     return axios("https://api.anilibria.tv/v3/title/schedule");
   });
@@ -28,6 +30,26 @@ const Schedule = () => {
     "Суббота",
     "Воскресенье",
   ];
+
+  const dayRefs = [
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+  ];
+
+  useEffect(() => {
+    console.log(params.get("toDay"));
+    if (params.get("toDay") != undefined && isLoading == false) {
+      dayRefs[params.get("toDay")].current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [isLoading]);
 
   if (isLoading)
     return (
@@ -51,20 +73,12 @@ const Schedule = () => {
           return (
             <div className="mt-2 flex flex-col gap-2" key={i}>
               <br />
-              <div className="bg-accent rounded">
+              <div className="bg-accent rounded" ref={dayRefs[i]}>
                 <h1 className="text-xl">{weekdays[res.day]}</h1>
               </div>
               <div className="grid grid-cols-4 gap-3">
                 {res.list.map((title, i) => {
-                  console.log(title);
-                  return (
-                    // <img
-                    //   src={`https://www.anilibria.tv/${title.posters.original.url}`}
-                    //   alt=""
-                    //   key={i}
-                    // />
-                    <UpdCard data={title} torrentsUrl key={i} />
-                  );
+                  return <UpdCard data={title} torrentsUrl key={i} />;
                 })}
               </div>
             </div>
