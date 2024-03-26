@@ -10,7 +10,7 @@ const Home = () => {
   const { data, isLoading, isFetching } = useQuery(
     "youtube",
     () => {
-      return axios("https://api.anilibria.tv/v3/youtube");
+      return axios("https://api.anilibria.tv/v3/youtube?items_per_page=16");
     },
     { refetchInterval: 1000 }
   );

@@ -29,7 +29,9 @@ const UpdatesList = () => {
   const { data, isLoading, isFetching } = useQuery(
     "updates",
     () => {
-      return axios("https://api.anilibria.tv/v3/title/updates");
+      return axios(
+        "https://api.anilibria.tv/v3/title/updates?items_per_page=10"
+      );
     },
     {
       refetchInterval: 30000,
@@ -42,7 +44,9 @@ const UpdatesList = () => {
     isFetching: searchFetching,
     refetch: research,
   } = useQuery("search", () => {
-    return axios(`https://api.anilibria.tv/v3/title/search?search=${search}`);
+    return axios(
+      `https://api.anilibria.tv/v3/title/search?search=${search}&items_per_page=10`
+    );
   });
 
   useEffect(() => {
@@ -83,7 +87,7 @@ const UpdatesList = () => {
                 return (
                   <div className="flex flex-col" key={i}>
                     <Link
-                      className="p-1 rounded hover:bg-accent"
+                      className="p-1 hover:bg-accent hover:rounded-md transition-all"
                       to={`/release/${title.code}`}
                     >
                       {title.names.ru}

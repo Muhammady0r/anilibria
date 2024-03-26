@@ -9,11 +9,7 @@ import { useQuery } from "react-query";
 const Random = () => {
   const nav = useNavigate();
 
-  useEffect(() => {
-    axios("https://api.anilibria.tv/v3/title/random").then((res) => {
-      nav(`/release/${res.data.code}`);
-    });
-  }, []);
+  useEffect(() => {}, []);
 
   //   const { data, isFetching } = useQuery("random", () => {
   //     return axios("https://api.anilibria.tv/v3/title/random");

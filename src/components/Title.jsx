@@ -17,20 +17,30 @@ import "ldrs/grid";
 import { Switch } from "@/components/ui/switch";
 
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 
 const Title = () => {
   const param = useParams();
   const nav = useNavigate();
-  const [episodes1080, setEpisodes1080] = useState([]);
-  const [episodes720, setEpisodes720] = useState([]);
-  const [episodes480, setEpisodes480] = useState([]);
+  // const [episodes1080, setEpisodes1080] = useState([]);
+  // const [episodes720, setEpisodes720] = useState([]);
+  // const [episodes480, setEpisodes480] = useState([]);
+  const [vidQuality, setVidQuality] = useState("hd");
   const [episodes, setEpisodes] = useState([]);
   const [episode, setEpisode] = useState(0);
   const [isOpening, setIsOpening] = useState(false);
@@ -52,7 +62,11 @@ const Title = () => {
   const { data, isLoading, isFetching, refetch } = useQuery(
     "title-full",
     () => {
-      return axios(`https://api.anilibria.tv/v3/title?code=${param.code}`);
+      const req = axios(`https://api.anilibria.tv/v3/title?code=${param.code}`);
+      req.then((res) => {
+        setEpisodes(Object.values(res.data.player.list));
+      });
+      return req;
     },
     {
       refetchOnWindowFocus: false,
@@ -67,87 +81,24 @@ const Title = () => {
   }, [param]);
 
   useEffect(() => {
-    if (isLoading || window.location.pathname == "/random") return;
+    if (isLoading) return;
 
     if (localStorage.getItem(`${data.data.id}`) == null) {
       localStorage.setItem(`${data.data.id}`, 0);
     }
 
     setEpisode(+localStorage.getItem(`${data.data.id}`));
-
-    setEpisodes1080(
-      Object.keys(data.data.player.list).map((i) => {
-        return (
-          "https://" + data.data.player.host + data.data.player.list[i].hls.fhd
-        );
-      })
-    );
-
-    setEpisodes720(
-      Object.keys(data.data.player.list).map((i) => {
-        return (
-          "https://" + data.data.player.host + data.data.player.list[i].hls.hd
-        );
-      })
-    );
-
-    setEpisodes(episodes720);
-
-    setEpisodes480(
-      Object.keys(data.data.player.list).map((i) => {
-        return (
-          "https://" + data.data.player.host + data.data.player.list[i].hls.sd
-        );
-      })
-    );
-
-    // let array = [];
-    // for (
-    //   let i = data.data.player.episodes.first;
-    //   i <= data.data.player.episodes.last;
-    //   i++
-    // ) {
-    //   console.log(i);
-    //   array.push(
-    //     "https://" + data.data.player.host + data.data.player.list[i].hls.fhd
-    //   );
-    // }
-
-    // setEpisodes1080(array);
-
-    // array = [];
-    // for (
-    //   let i = data.data.player.episodes.first;
-    //   i <= data.data.player.episodes.last;
-    //   i++
-    // ) {
-    //   array.push(
-    //     "https://" + data.data.player.host + data.data.player.list[i].hls.hd
-    //   );
-    // }
-
-    // setEpisodes(array);
-    // setEpisodes720(array);
-
-    // array = [];
-    // for (
-    //   let i = data.data.player.episodes.first;
-    //   i <= data.data.player.episodes.last;
-    //   i++
-    // ) {
-    //   array.push(
-    //     "https://" + data.data.player.host + data.data.player.list[i].hls.sd
-    //   );
-    // }
-
-    // setEpisodes480(array);
   }, [data]);
 
   useEffect(() => {
     if (player.current == null) return;
 
     player.current.seekTo(
-      parseFloat(localStorage.getItem(`${data.data.id}played`))
+      parseFloat(
+        localStorage.getItem(
+          `${data.data.id}-${episodes[episode].episode}played`
+        )
+      )
     );
   }, [player]);
 
@@ -240,7 +191,7 @@ const Title = () => {
             <div
               className={`absolute w-full backdrop-blur-sm p-1 text-center ${
                 data.data.announce == null ? "cursor-pointer" : ""
-              }`}
+              } ${data.data.status.code == 2 ? "hidden" : ""}`}
               style={{ background: "#12121299" }}
               onClick={() => {
                 if (data.data.announce == null)
@@ -266,56 +217,68 @@ const Title = () => {
             />
           </div>
         </CardHeader>
-        {data && episodes.length > 0 && (
+        {data && (
           <CardContent className={"w-full relative"}>
             <div className="flex items-center gap-2">
-              Серия:
-              <Select
-                defaultValue={localStorage.getItem(`${data.data.id}`)}
-                onValueChange={(e) => {
-                  localStorage.setItem(`${data.data.id}`, +e);
-                  localStorage.setItem(`${data.data.id}played`, 0);
-                  setEpisode(+e);
-                }}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Серия" />
-                </SelectTrigger>
-                <SelectContent>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={`${buttonVariants({ variant: "" })} gap-2`}
+                >
+                  Серия {episode + 1} <i className="fa-solid fa-caret-down"></i>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className={"max-h-[60vh] overflow-auto"}>
+                  <DropdownMenuLabel>Серии</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
                   {[...new Array(data.data.player.episodes.last)].map(
                     (_, i) => {
                       return (
-                        <SelectItem value={`${i}`} key={i}>
+                        <DropdownMenuItem
+                          key={i}
+                          onClick={() => {
+                            localStorage.setItem(`${data.data.id}`, i);
+                            localStorage.setItem(
+                              `${data.data.id}-${episodes[episode].episode}played`,
+                              0
+                            );
+                            setEpisode(i);
+                          }}
+                        >
                           Серия {i + 1}
-                        </SelectItem>
+                        </DropdownMenuItem>
                       );
                     }
                   )}
-                </SelectContent>
-              </Select>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <span></span>
-              Качество:
-              <Select
-                defaultValue="720"
-                onValueChange={(e) => {
-                  if (e == 1080) {
-                    setEpisodes(episodes1080);
-                  } else if (e == 720) {
-                    setEpisodes(episodes720);
-                  } else {
-                    setEpisodes(episodes480);
-                  }
-                }}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Качество" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1080">1080p</SelectItem>
-                  <SelectItem value="720">720p</SelectItem>
-                  <SelectItem value="480">480p</SelectItem>
-                </SelectContent>
-              </Select>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={`${buttonVariants({ variant: "" })} gap-2`}
+                >
+                  {vidQuality == "fhd"
+                    ? "1080p"
+                    : vidQuality == "hd"
+                    ? "720p"
+                    : "480p"}{" "}
+                  <i className="fa-solid fa-caret-down"></i>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className={"max-h-[60vh] overflow-auto"}>
+                  <DropdownMenuLabel>Качество</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {["fhd", "hd", "sd"].map((q, i) => {
+                    return (
+                      <DropdownMenuItem
+                        key={i}
+                        onClick={() => {
+                          setVidQuality(q);
+                        }}
+                      >
+                        {q == "fhd" ? "1080p" : q == "hd" ? "720p" : "480p"}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <span></span>
               <Switch
                 id={"autoskip"}
@@ -327,15 +290,28 @@ const Title = () => {
                   localStorage.setItem("autoskip", e);
                 }}
               />
+              <span></span>
+              <Button
+                className={`${
+                  isOpening ? "" : "hidden"
+                } absolute bottom-24 right-10 z-[99999]`}
+                onClick={() => {
+                  player.current.seekTo(
+                    data.data.player.list[episode + 1].skips.opening[1]
+                  );
+                }}
+              >
+                Пропустить
+              </Button>
               <label htmlFor="autoskip">Автопропуск опенинга</label>
             </div>
             <br />
             <h1 className="text-xl">
-              Серия {episode + 1}:{" "}
-              <b>{data.data.player.list[episode + 1].name}</b>
+              Серия {episodes[episode]?.episode}:{" "}
+              <b>{episodes[episode]?.name}</b>
             </h1>
             <ReactPlayer
-              url={episodes[episode]}
+              url={`https://${data.data.player.host}${episodes[episode]?.hls[vidQuality]}`}
               controls
               width={"100%"}
               height={"100%"}
@@ -345,24 +321,44 @@ const Title = () => {
                 if (episode + 1 < data.data.player.episodes.last) {
                   localStorage.setItem(`${data.data.id}`, episode + 1);
                   setEpisode(episode + 1);
+                  setTimeout(() => {
+                    player.plating = true;
+                  }, 500);
                 }
               }}
               onReady={() => {
                 player.current.seekTo(
-                  parseFloat(localStorage.getItem(`${data.data.id}played`))
+                  parseFloat(
+                    localStorage.getItem(
+                      `${data.data.id}-${episodes[episode].episode}played`
+                    )
+                  )
                 );
               }}
               onProgress={(e) => {
-                localStorage.setItem(`${data.data.id}played`, e.playedSeconds);
+                localStorage.setItem(
+                  `${data.data.id}-${episodes[episode].episode}played`,
+                  e.playedSeconds
+                );
                 if (
-                  parseInt(localStorage.getItem(`${data.data.id}played`)) >
-                    data.data.player.list[episode + 1].skips.opening[0] &&
-                  parseInt(localStorage.getItem(`${data.data.id}played`)) <
-                    data.data.player.list[episode + 1].skips.opening[1]
+                  parseInt(
+                    localStorage.getItem(
+                      `${data.data.id}-${episodes[episode].episode}played`
+                    )
+                  ) > data.data.player.list[episode + 1].skips.opening[0] &&
+                  parseInt(
+                    localStorage.getItem(
+                      `${data.data.id}-${episodes[episode].episode}played`
+                    )
+                  ) < data.data.player.list[episode + 1].skips.opening[1]
                 ) {
                   if (
                     localStorage.getItem("autoskip") == "true" &&
-                    parseInt(localStorage.getItem(`${data.data.id}played`)) <
+                    parseInt(
+                      localStorage.getItem(
+                        `${data.data.id}-${episodes[episode].episode}played`
+                      )
+                    ) <
                       data.data.player.list[episode + 1].skips.opening[1] + 1
                   ) {
                     player.current.seekTo(
@@ -376,18 +372,6 @@ const Title = () => {
                 }
               }}
             />
-            <Button
-              className={`${
-                isOpening ? "" : "hidden"
-              } absolute bottom-24 right-10 z-[99999]`}
-              onClick={() => {
-                player.current.seekTo(
-                  data.data.player.list[episode + 1].skips.opening[1]
-                );
-              }}
-            >
-              Пропустить
-            </Button>
           </CardContent>
         )}
       </Card>
