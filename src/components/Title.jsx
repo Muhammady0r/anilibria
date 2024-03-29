@@ -4,8 +4,6 @@ import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
-import ReactPlayer from "react-player";
-
 import {
   Popover,
   PopoverContent,
@@ -14,25 +12,9 @@ import {
 
 import "ldrs/grid";
 
-import { Switch } from "@/components/ui/switch";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button, buttonVariants } from "./ui/button";
+
+import Player from "./Player";
 
 const Title = () => {
   const param = useParams();
@@ -40,14 +22,6 @@ const Title = () => {
   // const [episodes1080, setEpisodes1080] = useState([]);
   // const [episodes720, setEpisodes720] = useState([]);
   // const [episodes480, setEpisodes480] = useState([]);
-  const [vidQuality, setVidQuality] = useState("hd");
-  const [episodes, setEpisodes] = useState([]);
-  const [episode, setEpisode] = useState(0);
-  const [isOpening, setIsOpening] = useState(false);
-
-  const check = useRef(null);
-
-  const player = useRef(null);
 
   const weekdays = [
     "Понедельник",
@@ -63,9 +37,7 @@ const Title = () => {
     "title-full",
     () => {
       const req = axios(`https://api.anilibria.tv/v3/title?code=${param.code}`);
-      req.then((res) => {
-        setEpisodes(Object.values(res.data.player.list));
-      });
+      req.then((res) => {});
       return req;
     },
     {
@@ -75,32 +47,9 @@ const Title = () => {
 
   useEffect(() => {
     if (data && data.data.code != param.code) {
-      window.scrollTo(0, 0);
       refetch();
     }
   }, [param]);
-
-  useEffect(() => {
-    if (isLoading) return;
-
-    if (localStorage.getItem(`${data.data.id}`) == null) {
-      localStorage.setItem(`${data.data.id}`, 0);
-    }
-
-    setEpisode(+localStorage.getItem(`${data.data.id}`));
-  }, [data]);
-
-  useEffect(() => {
-    if (player.current == null) return;
-
-    player.current.seekTo(
-      parseFloat(
-        localStorage.getItem(
-          `${data.data.id}-${episodes[episode].episode}played`
-        )
-      )
-    );
-  }, [player]);
 
   function getSubWorkers() {
     if (data == undefined) return;
@@ -217,163 +166,9 @@ const Title = () => {
             />
           </div>
         </CardHeader>
-        {data && (
-          <CardContent className={"w-full relative"}>
-            <div className="flex items-center gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={`${buttonVariants({ variant: "" })} gap-2`}
-                >
-                  Серия {episode + 1} <i className="fa-solid fa-caret-down"></i>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className={"max-h-[60vh] overflow-auto"}>
-                  <DropdownMenuLabel>Серии</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {[...new Array(data.data.player.episodes.last)].map(
-                    (_, i) => {
-                      return (
-                        <DropdownMenuItem
-                          key={i}
-                          onClick={() => {
-                            localStorage.setItem(`${data.data.id}`, i);
-                            localStorage.setItem(
-                              `${data.data.id}-${episodes[episode].episode}played`,
-                              0
-                            );
-                            setEpisode(i);
-                          }}
-                        >
-                          Серия {i + 1}
-                        </DropdownMenuItem>
-                      );
-                    }
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <span></span>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={`${buttonVariants({ variant: "" })} gap-2`}
-                >
-                  {vidQuality == "fhd"
-                    ? "1080p"
-                    : vidQuality == "hd"
-                    ? "720p"
-                    : "480p"}{" "}
-                  <i className="fa-solid fa-caret-down"></i>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className={"max-h-[60vh] overflow-auto"}>
-                  <DropdownMenuLabel>Качество</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {["fhd", "hd", "sd"].map((q, i) => {
-                    return (
-                      <DropdownMenuItem
-                        key={i}
-                        onClick={() => {
-                          setVidQuality(q);
-                        }}
-                      >
-                        {q == "fhd" ? "1080p" : q == "hd" ? "720p" : "480p"}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <span></span>
-              <Switch
-                id={"autoskip"}
-                ref={check}
-                defaultChecked={
-                  localStorage.getItem("autoskip") == "false" ? 0 : 1
-                }
-                onCheckedChange={(e) => {
-                  localStorage.setItem("autoskip", e);
-                }}
-              />
-              <span></span>
-              <Button
-                className={`${
-                  isOpening ? "" : "hidden"
-                } absolute bottom-24 right-10 z-[99999]`}
-                onClick={() => {
-                  player.current.seekTo(
-                    data.data.player.list[episode + 1].skips.opening[1]
-                  );
-                }}
-              >
-                Пропустить
-              </Button>
-              <label htmlFor="autoskip">Автопропуск опенинга</label>
-            </div>
-            <br />
-            <h1 className="text-xl">
-              Серия {episodes[episode]?.episode}:{" "}
-              <b>{episodes[episode]?.name}</b>
-            </h1>
-            <ReactPlayer
-              url={`https://${data.data.player.host}${episodes[episode]?.hls[vidQuality]}`}
-              controls
-              width={"100%"}
-              height={"100%"}
-              ref={player}
-              className={"rounded-md overflow-hidden border border-accent mt-2"}
-              onEnded={() => {
-                if (episode + 1 < data.data.player.episodes.last) {
-                  localStorage.setItem(`${data.data.id}`, episode + 1);
-                  setEpisode(episode + 1);
-                  setTimeout(() => {
-                    player.plating = true;
-                  }, 500);
-                }
-              }}
-              onReady={() => {
-                player.current.seekTo(
-                  parseFloat(
-                    localStorage.getItem(
-                      `${data.data.id}-${episodes[episode].episode}played`
-                    )
-                  )
-                );
-              }}
-              onProgress={(e) => {
-                localStorage.setItem(
-                  `${data.data.id}-${episodes[episode].episode}played`,
-                  e.playedSeconds
-                );
-                if (
-                  parseInt(
-                    localStorage.getItem(
-                      `${data.data.id}-${episodes[episode].episode}played`
-                    )
-                  ) > data.data.player.list[episode + 1].skips.opening[0] &&
-                  parseInt(
-                    localStorage.getItem(
-                      `${data.data.id}-${episodes[episode].episode}played`
-                    )
-                  ) < data.data.player.list[episode + 1].skips.opening[1]
-                ) {
-                  if (
-                    localStorage.getItem("autoskip") == "true" &&
-                    parseInt(
-                      localStorage.getItem(
-                        `${data.data.id}-${episodes[episode].episode}played`
-                      )
-                    ) <
-                      data.data.player.list[episode + 1].skips.opening[1] + 1
-                  ) {
-                    player.current.seekTo(
-                      data.data.player.list[episode + 1].skips.opening[1] + 2
-                    );
-                  } else {
-                    setIsOpening(true);
-                  }
-                } else {
-                  setIsOpening(false);
-                }
-              }}
-            />
-          </CardContent>
-        )}
+        <CardContent>
+          <Player data={data.data} />
+        </CardContent>
       </Card>
     </div>
   );
