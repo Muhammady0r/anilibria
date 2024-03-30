@@ -19,9 +19,6 @@ import Player from "./Player";
 const Title = () => {
   const param = useParams();
   const nav = useNavigate();
-  // const [episodes1080, setEpisodes1080] = useState([]);
-  // const [episodes720, setEpisodes720] = useState([]);
-  // const [episodes480, setEpisodes480] = useState([]);
 
   const weekdays = [
     "Понедельник",
@@ -77,13 +74,14 @@ const Title = () => {
     );
 
   return (
-    <div>
-      <Card>
+    <div className="sticky top-2 h-[98vh]">
+      <Card className="h-full overflow-auto">
         <CardHeader
           className={"grid gap-4"}
           style={{ gridTemplateColumns: "2fr 1.25fr" }}
         >
           <div>
+            <h1 className="text-center">{data.data.id}</h1>
             <h1 className="text-center text-xl font-bold">
               {data.data.names.ru}
             </h1>
@@ -138,7 +136,7 @@ const Title = () => {
           </div>
           <div className="relative rounded overflow-hidden">
             <div
-              className={`absolute w-full backdrop-blur-sm p-1 text-center ${
+              className={`absolute m-[2%] w-[96%] backdrop-blur-lg p-1 text-center rounded ${
                 data.data.announce == null ? "cursor-pointer" : ""
               } ${data.data.status.code == 2 ? "hidden" : ""}`}
               style={{ background: "#12121299" }}

@@ -26,6 +26,7 @@
     "ldrs": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-full-screen": "^1.1.1",
     "react-hide-on-mouse-stop": "^1.0.3",
     "react-player": "^2.15.1",
     "react-query": "^3.39.3",
