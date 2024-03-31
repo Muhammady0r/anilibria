@@ -51,10 +51,6 @@
   border-radius: 8px;
 }
 
-/* .transition-all {
-  transition: all 200ms, filter 0.2s, opacity 0.2s !important;
-} */
-
 .m-0 {
   margin: 0 !important;
 }
@@ -73,8 +69,6 @@
 }
 
 .hide-a {
-  /* filter: blur(64px);
-  backdrop-filter: none; */
   pointer-events: none;
   opacity: 0;
 }

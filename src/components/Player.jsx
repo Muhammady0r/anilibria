@@ -87,8 +87,23 @@ const Player = ({ data }) => {
     player.current.seekTo(time);
   }, []);
 
+  if (episodes == null)
+    return (
+      <>
+        <div className="w-full mt-12 flex justify-center items-center">
+          <i className="fa-solid fa-triangle-exclamation fa-2xl"></i>
+        </div>
+      </>
+    );
+
   if (episodes.length < 1)
-    return <l-helix size="45" speed="2.5" color="red"></l-helix>;
+    return (
+      <>
+        <div className="w-full mt-12 flex justify-center items-center">
+          <l-helix size="45" speed="2.5" color="red"></l-helix>
+        </div>
+      </>
+    );
 
   return (
     <>
@@ -267,6 +282,7 @@ const Player = ({ data }) => {
 
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center gap-6">
                   <Button
+                    variant={"secondary"}
                     className={`w-10 h-10 scale-[1.125] transition-all flex flex-col pt-5 gap-2`}
                     onClick={() => {
                       player.current.seekTo(currentTime - 10);
@@ -277,6 +293,7 @@ const Player = ({ data }) => {
                     <h1 className="text-xs">10 сек</h1>
                   </Button>
                   <Button
+                    variant={"secondary"}
                     className={`w-10 h-10 scale-[1.25] transition-all ${
                       episode == 0 ? "hide-a" : ""
                     }`}
@@ -289,6 +306,7 @@ const Player = ({ data }) => {
                     <i className="fa-solid fa-backward"></i>
                   </Button>
                   <Button
+                    variant={"secondary"}
                     className={`w-10 h-10 scale-[1.5] transition-all ${
                       buffering ? "hide-a" : ""
                     }`}
@@ -303,6 +321,7 @@ const Player = ({ data }) => {
                     )}
                   </Button>
                   <Button
+                    variant={"secondary"}
                     className={`w-10 h-10 scale-[1.25] transition-all ${
                       episodes[episode].episode == data.player.episodes.last
                         ? "hide-a"
@@ -317,6 +336,7 @@ const Player = ({ data }) => {
                     <i className="fa-solid fa-forward"></i>
                   </Button>
                   <Button
+                    variant={"secondary"}
                     className={`w-10 h-10 scale-[1.125] transition-all flex flex-col pt-5 gap-2`}
                     onClick={() => {
                       player.current.seekTo(currentTime + 10);
@@ -357,6 +377,7 @@ const Player = ({ data }) => {
                     bufferTime={progress}
                     onChange={handleTimeChange}
                     limitTimeTooltipBySides={true}
+                    className={"relative z-30"}
                   />
                   <div className="relative h-full flex justify-between items-end">
                     <h1 className="absolute bottom-0 left-0">

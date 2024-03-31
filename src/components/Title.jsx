@@ -95,7 +95,13 @@ const Title = () => {
             <div className="border w-full mt-2 mb-2"></div>
             <ul>
               <li>
-                <b>Сезон:</b> {data.data.season.year} {data.data.season.string}
+                <b>Сезон:</b>{" "}
+                <Link
+                  className="hover:underline"
+                  to={`/titles?year=${data.data.season.year}&season=${data.data.season.code}`}
+                >
+                  {data.data.season.year} {data.data.season.string}
+                </Link>
               </li>
               <li>
                 <b>Тип:</b> {data.data.type.full_string}

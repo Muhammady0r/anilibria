@@ -13,6 +13,9 @@ import Schedule from "./components/Schedule";
 import Title from "./components/Title";
 import Random from "./components/Random";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import Titles from "./components/Titles";
+
+import "ldrs/grid";
 
 function App() {
   return (
@@ -49,6 +52,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/release/:code" element={<Title />} />
             <Route path="/random" element={<Random />} />
+            <Route path="/titles" element={<Titles />} />
             <Route path="/donate" element={<Donate />} />
             <Route path="/fetch-titles" element={<Fetch />} />
             <Route path="/schedule" element={<Schedule />} />

@@ -2,8 +2,6 @@ import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
 
-import "ldrs/grid";
-
 import { Link } from "react-router-dom";
 
 const Home = () => {
