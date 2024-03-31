@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 import {
@@ -34,7 +34,9 @@ const Title = () => {
     "title-full",
     () => {
       const req = axios(`https://api.anilibria.tv/v3/title?code=${param.code}`);
-      req.then((res) => {});
+      // req.then((res) => {
+      //   console.log(res.data.franchises);
+      // });
       return req;
     },
     {
@@ -81,7 +83,9 @@ const Title = () => {
           style={{ gridTemplateColumns: "2fr 1.25fr" }}
         >
           <div>
-            <h1 className="text-center">{data.data.id}</h1>
+            <h1 className="text-center text-xs text-muted">
+              ID: {data.data.id}
+            </h1>
             <h1 className="text-center text-xl font-bold">
               {data.data.names.ru}
             </h1>
@@ -133,6 +137,40 @@ const Title = () => {
             </ul>
             <div className="border w-full mt-2 mb-2"></div>
             <p>{data.data.description}</p>
+            {data.data.franchises.length > 0 && (
+              <Card className={"mt-2 p-4"}>
+                <p className="text-xs">Порядок просмотра</p>
+                <h1 className="text-lg font-bold">
+                  {data.data.franchises[0].franchise.name}
+                </h1>
+                <div className="flex flex-col gap-1 mt-2">
+                  {data.data.franchises[0].releases.map((item, i) => {
+                    if (param.code == item.code)
+                      return (
+                        <h1
+                          to={"/release/" + item.code}
+                          key={i}
+                          className="text-secondary"
+                        >
+                          #{item.ordinal} {item.names.ru}
+                        </h1>
+                      );
+                    return (
+                      <Link
+                        to={"/release/" + item.code}
+                        key={i}
+                        className="hover:underline"
+                      >
+                        <span className="text-muted-foreground">
+                          #{item.ordinal}
+                        </span>{" "}
+                        {item.names.ru}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
           </div>
           <div className="relative rounded overflow-hidden">
             <div

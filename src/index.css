@@ -51,17 +51,8 @@
   border-radius: 8px;
 }
 
-.transition-all {
-  transition: all 200ms, filter 0.25s, opacity 0.25s !important;
-}
-
-/* .fullscreen {
-  position: fixed;
-  width: 100%;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  z-index: 9;
+/* .transition-all {
+  transition: all 200ms, filter 0.2s, opacity 0.2s !important;
 } */
 
 .m-0 {
@@ -82,9 +73,10 @@
 }
 
 .hide-a {
-  filter: blur(64px);
-  backdrop-filter: none;
+  /* filter: blur(64px);
+  backdrop-filter: none; */
   pointer-events: none;
+  opacity: 0;
 }
 
 .bg-none {

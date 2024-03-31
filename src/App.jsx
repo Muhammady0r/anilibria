@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import Schedule from "./components/Schedule";
 import Title from "./components/Title";
 import Random from "./components/Random";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
         <UpdatesList />
       </div>
       <Footer />
+      <SpeedInsights />
     </>
   );
 }
