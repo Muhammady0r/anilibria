@@ -25,16 +25,13 @@ import "ldrs/grid";
 
 const UpdatesList = () => {
   const [search, setSearch] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-  const [onFocus, setOnFocus] = useState(false);
-  const [listing, setListing] = useState(false);
+
+  const searchInput = useRef(null);
 
   const { data, isLoading, isFetching } = useQuery(
     "updates",
     () => {
-      return axios(
-        "https://api.anilibria.tv/v3/title/updates?items_per_page=6"
-      );
+      return axios("https://api.anilibria.tv/v3/title/updates");
     },
     {
       refetchInterval: 30000,
@@ -66,47 +63,19 @@ const UpdatesList = () => {
     );
 
   return (
-    <div className="h-auto min-w-[300px]">
+    <div className="min-w-[300px] sticky top-0">
       <Card>
-        <CardContent className="flex flex-col p-2 gap-2 relative overflow-auto">
+        <CardContent className="flex flex-col p-2 gap-2 relative">
           <Input
             placeholder={"Найти аниме по названию"}
             onChange={(e) => {
               setSearch(e.target.value);
-              setIsSearching(true);
             }}
-            onBlur={() => {
-              setOnFocus(false);
-              if (listing) return;
-              setIsSearching(false);
-            }}
-            onFocus={() => {
-              setOnFocus(true);
-              setIsSearching(true);
-            }}
-            // onMouseOver={() => {
-            //   setIsSearching(true);
-            // }}
-            // onMouseOut={() => {
-            //   if (onFocus) return;
-            //   setIsSearching(false);
-            // }}
           />
           <div
             className={`transition-all flex flex-col absolute top-10 z-10 bg-primary-foreground w-[95%] left-[2.5%] p-1 rounded ${
-              search == "" || !isSearching
-                ? "blur-3xl pointer-events-none opacity-30"
-                : ""
+              search == "" ? "blur-3xl pointer-events-none opacity-30" : ""
             }`}
-            onMouseOver={() => {
-              setListing(true);
-              setIsSearching(true);
-            }}
-            onMouseOut={() => {
-              setListing(false);
-              if (onFocus) return;
-              setIsSearching(false);
-            }}
           >
             {searchFetching && (
               <div className="w-full flex items-center justify-center p-2">
@@ -120,6 +89,7 @@ const UpdatesList = () => {
                     <Link
                       className="p-1 hover:bg-accent hover:rounded-md transition-all"
                       to={`/release/${title.code}`}
+                      onClick={() => {}}
                     >
                       {title.names.ru}
                     </Link>
@@ -129,7 +99,9 @@ const UpdatesList = () => {
               })}
           </div>
           {data.data.list.map((title, i) => {
-            return <UpdCard data={title} torrentsUrl key={i} />;
+            return (
+              <UpdCard data={title} torrentsUrl key={i} className={"mb-2"} />
+            );
           })}
         </CardContent>
       </Card>

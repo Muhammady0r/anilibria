@@ -19,11 +19,21 @@ const Footer = () => {
           </Link>
         </div>
         <img src="https://www.anilibria.tv/img/footer.png" alt="" />
-        <p className="text-xs self-end">
-          Весь материал на сайте представлен исключительно для домашнего
-          ознакомительного просмотра. В случаях нарушения авторских прав -
-          обращайтесь на почту firegamesboy0220@gmail.com
-        </p>
+        <div className="flex flex-col justify-between">
+          <div>
+            <Link
+              className="hover:underline"
+              to={"tg://resolve?domain=Libria911Bot"}
+            >
+              Вопрос
+            </Link>
+          </div>
+          <p className="text-xs ">
+            Весь материал на сайте представлен исключительно для домашнего
+            ознакомительного просмотра. В случаях нарушения авторских прав -
+            обращайтесь на почту firegamesboy0220@gmail.com
+          </p>
+        </div>
       </Card>
     </div>
   );

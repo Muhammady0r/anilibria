@@ -1,48 +1,123 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 import "ldrs/grid";
-import { Card } from "./ui/card";
-import UpdCard from "./UpdCard/UpdCard";
 
-const titlesId = [
-  381, 382, 383, 384, 386, 389, 390, 391, 392, 393, 394, 395, 396, 398, 399,
-  400, 401, 402, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415,
-  416, 417, 418, 420, 421, 422, 423, 424, 426, 427, 428, 429, 431, 432, 433,
-  434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 466, 467, 468, 469, 473,
-  474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 489, 495,
-  496, 502, 505, 507, 508, 509, 511, 513, 515, 516, 517, 518, 519, 520, 521,
-  522, 543, 554, 556, 564, 565, 566, 567, 568, 570, 569, 571, 572, 573, 574,
-  575, 576, 577, 578, 579, 580, 608, 611, 638, 644, 656, 660, 664, 686, 707,
-  711, 740, 741, 742, 753, 758, 762, 767, 772, 774, 777, 780, 783, 787, 796,
-  801, 805, 809, 820, 821, 822, 823, 824, 825, 826, 827, 834, 870, 872, 873,
-  876, 877, 878, 882, 893, 908, 943, 973, 1068, 1092, 1128, 1130, 1184, 1201,
-  1202, 1203, 1204, 1205, 1206, 1209, 1210, 1211, 1217, 1225, 1229, 1230, 1241,
-  1243, 1247, 1253, 1274, 1286, 1337, 1339, 1400, 1405, 1408, 1410, 1454, 1531,
-  1622, 1641, 1663, 1713, 1744, 1745, 1746, 1747, 1748, 1749, 1750, 1751, 1752,
-  1753, 1756, 1755, 1757, 1759, 1758, 1760, 1762, 1761, 1763, 1764, 1765, 1772,
-  1773, 1785, 1807, 1834, 1908, 2086, 2110, 2111, 2112, 2113, 2115, 2114, 2116,
-  2119, 2120, 2118, 2121, 2123, 2122, 2124, 2125, 2126, 2128, 2127, 2129, 2131,
-  2132, 2133, 2135, 2137, 2154, 2233, 2333, 2336, 2417, 2495, 2621, 2622, 2624,
-  2626, 2628, 2630, 2631, 2632, 2633, 2634, 2635, 2636, 2637, 2639, 2640, 2641,
-  2642, 2643, 2644, 2645, 2646, 2720, 2766, 2850, 2872, 2919, 2925, 2947, 2968,
-  3024, 3045, 3047, 3048, 3049, 3050, 3051, 3052, 3053, 3054, 3055, 3058, 3057,
-  3056, 3059, 3060, 3062, 3061, 3063, 3065, 3066, 3070, 3091, 3094, 3114, 3123,
-  3125, 3136, 3164, 3204, 3327, 3345, 3352, 3401, 3403, 3426, 3440, 3459, 3464,
-  3465, 3467, 3502, 3526, 3529, 3534, 3542, 3557, 3559, 3558, 3570, 3572, 3578,
-  3595, 3598, 3599, 3600, 3604, 3606, 3611, 3615, 3616, 3617, 3621, 3689, 3747,
-  3788,
-];
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+import { RocketIcon } from "@radix-ui/react-icons";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { Checkbox } from "@/components/ui/checkbox";
+
+import Select from "react-select";
+
+import { Switch } from "@/components/ui/switch";
 
 const Releases = () => {
+  const [genres, setGenres] = useState([]);
+  const [years, setYears] = useState([]);
+  const seasons = [
+    { value: 1, label: "Зима" },
+    { value: 2, label: "Весна" },
+    { value: 3, label: "Лето" },
+    { value: 4, label: "Осень" },
+  ];
+
+  const [sortByFav, setSort] = useState(true);
+
   const { data, isLoading } = useQuery("releases", () => {
     return axios(
-      `https://api.anilibria.tv/v3/title/list?id_list=${titlesId.join(",")}`
+      `https://api.anilibria.tv/v3/title/search/advanced?query={season.year}%3E=1996&order_by=${
+        sortByFav ? "in_favorites" : "updated"
+      }&sort_direction=1&items_per_page=12`
     );
   });
 
-  if (isLoading)
+  const { data: yearsData, isLoading: yearsLoading } = useQuery("years", () => {
+    return axios("https://api.anilibria.tv/v3/years");
+  });
+
+  const { data: genresData, isLoading: genresLoading } = useQuery(
+    "genres",
+    () => {
+      return axios("https://api.anilibria.tv/v3/genres");
+    }
+  );
+
+  useEffect(() => {
+    if (yearsData != undefined) {
+      setYears(
+        yearsData.data
+          .reverse()
+          .filter((res) => {
+            return res <= +new Date().getFullYear();
+          })
+          .map((res) => {
+            return {
+              value: res,
+              label: res,
+            };
+          })
+      );
+
+      console.log(years);
+    }
+
+    if (genresData == undefined) return;
+
+    setGenres(
+      genresData.data.map((res) => {
+        return {
+          value: res,
+          label: res,
+        };
+      })
+    );
+  }, [yearsData, genresData]);
+
+  const colorStyles = {
+    control: (styles) => ({
+      ...styles,
+      backgroundColor: "#121212",
+      borderColor: "red",
+      color: "#fff",
+    }),
+    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+      return {
+        ...styles,
+        color: "#fff",
+        backgroundColor: "#121212",
+        // margin: "1px 0",
+        ":hover": { backgroundColor: "red" },
+      };
+    },
+    multiValue: (styles) => {
+      return {
+        ...styles,
+        backgroundColor: "red",
+        color: "#000",
+      };
+    },
+    multiValueLabel: (styles) => {
+      return {
+        ...styles,
+        color: "#fff",
+        fontWeight: "600",
+      };
+    },
+  };
+
+  if (isLoading && genresLoading && yearsLoading)
     return (
       <div className="upd-list flex w-full">
         <l-helix size="45" speed="2.5" color="red"></l-helix>
@@ -50,11 +125,69 @@ const Releases = () => {
     );
 
   return (
-    <div className="p-2 grid grid-cols-4 gap-2">
-      {data.data.map((titleRes) => {
-        console.log(titleRes);
-        return <UpdCard data={titleRes} />;
-      })}
+    <div className="">
+      <Alert className={"my-2"}>
+        <RocketIcon className="h-4 w-4" />
+        <AlertTitle>Страница ещё в разработке!</AlertTitle>
+      </Alert>
+      <Card className={""}>
+        <CardHeader className="flex flex-row w-full gap-6 justify-between items-end">
+          <Select
+            options={genres}
+            onChange={(e) => {
+              console.log(e);
+            }}
+            styles={colorStyles}
+            isMulti
+            placeholder="Выбрать жанры"
+            className="w-[50%]"
+          />
+          <Select
+            options={years}
+            onChange={(e) => {
+              console.log(e);
+            }}
+            styles={colorStyles}
+            isMulti
+            placeholder="Год"
+            className="w-[30%]"
+          />
+          <Select
+            options={seasons}
+            onChange={(e) => {
+              console.log(e);
+            }}
+            styles={colorStyles}
+            isMulti
+            placeholder="Сезон"
+            className="w-[20%]"
+          />
+        </CardHeader>
+        <CardContent className="flex gap-6">
+          <div
+            className="relative bg-black p-2 text-center overflow-hidden rounded border border-accent cursor-pointer select-none"
+            onClick={() => {
+              setSort((prev) => !prev);
+            }}
+          >
+            <h1
+              className={`absolute bg-black h-full w-full top-0 left-0 transition-all flex justify-center items-center ${
+                sortByFav ? "translate-x-full" : ""
+              }`}
+            >
+              Новые
+            </h1>
+            <h1>Популярные</h1>
+          </div>
+          <label
+            className={`bg-black p-2 text-center overflow-hidden rounded border border-accent cursor-pointer select-none flex justify-center items-center gap-2`}
+            htmlFor="finished"
+          >
+            <Checkbox id="finished" />
+            Релиз завершён
+          </label>
+        </CardContent>
+      </Card>
     </div>
   );
 };

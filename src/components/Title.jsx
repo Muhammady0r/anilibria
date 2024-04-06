@@ -76,8 +76,9 @@ const Title = () => {
     );
 
   return (
-    <div className="sticky top-2 h-[98vh]">
-      <Card className="h-full overflow-auto">
+    // <div className="sticky top-2 h-[98vh]">
+    <div>
+      <Card className="overflow-auto">
         <CardHeader
           className={"grid gap-4"}
           style={{ gridTemplateColumns: "2fr 1.25fr" }}
@@ -212,6 +213,41 @@ const Title = () => {
           <Player data={data.data} />
         </CardContent>
       </Card>
+      <div className="grid grid-cols-3 gap-2 py-2">
+        <Link
+          className="rounded overflow-hidden"
+          to={"https://vk.com/anilibria"}
+          target="_blank"
+        >
+          <img
+            src="https://www.anilibria.tv/img/other/a1.jpg"
+            className="w-full"
+            alt=""
+          />
+        </Link>
+        <Link
+          className="rounded overflow-hidden"
+          to={"tg://resolve?domain=anilibria_tv"}
+          // target="_blank"
+        >
+          <img
+            src="https://www.anilibria.tv/img/other/a2.jpg"
+            className="w-full"
+            alt=""
+          />
+        </Link>
+        <Link
+          className="rounded overflow-hidden"
+          to={"https://discord.gg/M6yCGeGN9B"}
+          target="_blank"
+        >
+          <img
+            src="https://www.anilibria.tv/img/other/a3.jpg"
+            className="w-full"
+            alt=""
+          />
+        </Link>
+      </div>
     </div>
   );
 };
