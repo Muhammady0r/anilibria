@@ -63,40 +63,6 @@ const Releases = () => {
   const { data, isLoading, isFetching, refetch } = useQuery(
     "releases",
     () => {
-      navigator.clipboard
-        .writeText(`https://api.anilibria.tv/v3/title/search/advanced?query=${
-        selectedYears.length < 1
-          ? "{season.year}>=1996"
-          : `${selectedYears
-              .map(
-                (year, i) =>
-                  `${i == 0 ? "" : "%20or%20"}{season.year} == ${year}`
-              )
-              .join("")}`
-      }${
-        selectedGenres.length > 0
-          ? selectedGenres
-              .map(
-                (genre, i) =>
-                  `${i == 0 ? " and " : " or "} "${genre}" in {genres}`
-              )
-              .join("")
-          : ""
-      }${
-        selectedSeasons.length > 0
-          ? selectedSeasons
-              .map(
-                (season, i) =>
-                  `${i == 0 ? " and " : " or "} {season.code}==${season}`
-              )
-              .join("")
-          : ""
-      }
-        &order_by=${
-          sortByFav ? "in_favorites" : "updated"
-        }&sort_direction=1&items_per_page=12${
-        page > 1 ? `&page=${page}` : ""
-      }`);
       const fetch = axios(
         `https://api.anilibria.tv/v3/title/search/advanced?query=${
           selectedYears.length < 1
