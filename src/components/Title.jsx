@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 
 import {
   Popover,
@@ -212,6 +212,60 @@ const Title = () => {
         <CardContent>
           <Player data={data.data} />
         </CardContent>
+        <CardFooter className={``}>
+          <div
+            className={`flex flex-col bg-muted w-full rounded overflow-hidden text-sm text-left`}
+          >
+            {data.data?.torrents?.list.map((torrent, i, a) => {
+              return (
+                <div
+                  className={`flex justify-between items-stretch ${
+                    a.length - 1 == i ? "" : "border-b-[1px]"
+                  } border-accent px-2`}
+                  key={i}
+                >
+                  <h1 className="py-1 pr-2">
+                    Серия {torrent.episodes.string}{" "}
+                    {`[${torrent.quality.string}]`}
+                  </h1>
+                  <div className="border-l-[1px] border-accent flex gap-3 py-1 pl-2">
+                    <h1 className="">
+                      <i className="fa-solid fa-download text-gray-500"></i>{" "}
+                      {torrent.size_string}
+                    </h1>
+                    <h1 className="">
+                      <i className="fa-solid fa-up-long text-green-500"></i>{" "}
+                      {torrent.seeders}
+                    </h1>
+                    <h1 className="">
+                      <i className="fa-solid fa-down-long text-red-500"></i>{" "}
+                      {torrent.leechers}
+                    </h1>
+                    <h1 className="">
+                      <i className="fa-solid fa-check text-cyan-500"></i>{" "}
+                      {torrent.downloads}
+                    </h1>
+                  </div>
+                  <h1 className="border-l-[1px] border-accent flex gap-2 justify-center items-center px-2">
+                    <span>Добавлен</span>
+                    {new Date(torrent.uploaded_timestamp * 1000).getMonth() + 1}
+                    /{new Date(torrent.uploaded_timestamp * 1000).getDate()}/
+                    {new Date(torrent.uploaded_timestamp * 1000).getFullYear()},{" "}
+                    {new Date(torrent.uploaded_timestamp * 1000).getHours()}:
+                    {String(
+                      new Date(torrent.uploaded_timestamp * 1000).getMinutes()
+                    ).padStart(2, "0")}
+                  </h1>
+                  <div className="border-l-[1px] border-accent pl-2 flex justify-center items-center">
+                    <Link to={"https://www.anilibria.tv/" + torrent.url}>
+                      <i className="fa-solid fa-file-arrow-down"></i> Скачать
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardFooter>
       </Card>
       <div className="grid grid-cols-3 gap-2 py-2">
         <Link

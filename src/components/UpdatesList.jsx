@@ -68,6 +68,7 @@ const UpdatesList = () => {
         <CardContent className="flex flex-col p-2 gap-2 relative">
           <Input
             placeholder={"Найти аниме по названию"}
+            ref={searchInput}
             onChange={(e) => {
               setSearch(e.target.value);
             }}
@@ -89,7 +90,11 @@ const UpdatesList = () => {
                     <Link
                       className="p-1 hover:bg-accent hover:rounded-md transition-all"
                       to={`/release/${title.code}`}
-                      onClick={() => {}}
+                      onClick={() => {
+                        searchInput.current.value = "";
+                        setSearch("");
+                        research();
+                      }}
                     >
                       {title.names.ru}
                     </Link>

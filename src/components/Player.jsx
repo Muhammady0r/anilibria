@@ -10,6 +10,14 @@ import "react-video-seek-slider/styles.css";
 
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import "ldrs/quantum";
 
 // import { HideOnMouseStop } from "react-hide-on-mouse-stop";
@@ -123,15 +131,44 @@ const Player = ({ data }) => {
   return (
     <>
       {data.player.is_rutube && (
-        <iframe
-          width="100%"
-          height="600"
-          className="rounded"
-          src={`https://rutube.ru/play/embed/${episodes[episode].rutube_id}?skinColor=e53935`}
-          frameBorder="0"
-          allow="clipboard-write; autoplay"
-          allowFullScreen
-        ></iframe>
+        <>
+          <Select
+            onValueChange={(e) => {
+              localStorage.setItem(`${data.id}`, e);
+              setCurrentTime(0);
+              setEpisode(e);
+            }}
+            defaultValue={episode}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Серия" />
+            </SelectTrigger>
+            <SelectContent>
+              {[...new Array(data.player.episodes.last)].map((_, i) => {
+                return (
+                  <SelectItem
+                    className={episode == i ? "pointer-events-none" : ""}
+                    key={i}
+                    disabled={episode == i ? true : false}
+                    value={i}
+                  >
+                    Серия {i + 1}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+          <br />
+          <iframe
+            width="100%"
+            height="600"
+            className="rounded"
+            src={`https://rutube.ru/play/embed/${episodes[episode].rutube_id}?skinColor=e53935`}
+            frameBorder="0"
+            allow="clipboard-write; autoplay"
+            allowFullScreen
+          ></iframe>
+        </>
       )}
       {!data.player.is_rutube && (
         <>
@@ -653,6 +690,7 @@ const Player = ({ data }) => {
 
             <img
               src="https://www.anilibria.tv/img/pleer2.jpg"
+              // src="https://raw.github.com/Muhammady0r/meedweff-cloud/master/roms/hyperos-1.0.1.0.2-eu-post-a13-ayan_xe/poster.jpg"
               className={`w-full ${light ? "" : "hidden"}`}
               alt=""
             />
