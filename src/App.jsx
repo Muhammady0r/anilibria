@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import UpdatesList from "./components/UpdatesList";
@@ -17,6 +17,9 @@ import Titles from "./components/Titles";
 import "ldrs/grid";
 import History from "./components/History";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { RocketIcon } from "@radix-ui/react-icons";
+
 function App() {
   return (
     <>
@@ -27,6 +30,20 @@ function App() {
           className="w-full max-md:h-[250px] max-md:object-cover"
         />
       </div>
+      <Alert className={"container border-none"}>
+        <RocketIcon className="h-4 w-4" />
+        <AlertTitle>
+          Не оффициальная версия сайта{" "}
+          <Link
+            to="https://www.anilibria.tv/"
+            className="text-blue-500 hover:underline"
+          >
+            Anilibria.tv
+          </Link>{" "}
+          от фаната
+        </AlertTitle>
+      </Alert>
+
       <div className="app container grid mt-2 gap-2">
         <div className="max-[1220px]:order-1">
           <Header />
