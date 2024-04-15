@@ -23,7 +23,7 @@ const Title = () => {
     "Вторник",
     "Среда",
     "Четверг",
-    "Пятницв",
+    "Пятница",
     "Суббота",
     "Воскресенье",
   ];
@@ -181,7 +181,7 @@ const Title = () => {
           </div>
           <div className="relative rounded overflow-hidden max-md:h-[400px] max-md:overflow-visible">
             <div
-              className={`absolute m-[2%] w-[96%] backdrop-blur-lg p-1 text-center rounded max-md:hidden ${
+              className={`absolute m-[2%] w-[96%] backdrop-blur-lg p-1 text-center rounded max-md:w-full max-md:m-0 max-md:mt-[1px] max-md:left-1/2 max-md:-translate-x-1/2 ${
                 data.data.announce == null ? "cursor-pointer" : ""
               } ${data.data.status.code == 2 ? "hidden" : ""}`}
               style={{ background: "#12121299" }}
@@ -219,17 +219,17 @@ const Title = () => {
             {data.data?.torrents?.list.map((torrent, i, a) => {
               return (
                 <div
-                  className={`flex justify-between items-stretch ${
+                  className={`flex justify-between items-stretch max-md:grid max-md:grid-cols-2 max-md:p-2 ${
                     a.length - 1 == i ? "" : "border-b-[1px]"
                   } border-accent px-2`}
                   key={i}
                 >
-                  <h1 className="py-1 pr-2">
+                  <h1 className="py-1 pr-2 font-bold">
                     Серия {torrent.episodes.string}{" "}
                     {`[${torrent.quality.string}]`}
                   </h1>
                   <div className="border-l-[1px] border-accent flex gap-3 py-1 pl-2">
-                    <h1 className="">
+                    <h1 className="max-md:flex max-md:flex-col">
                       <i className="fa-solid fa-download text-gray-500"></i>{" "}
                       {torrent.size_string}
                     </h1>
@@ -246,15 +246,15 @@ const Title = () => {
                       {torrent.downloads}
                     </h1>
                   </div>
-                  <h1 className="border-l-[1px] border-accent flex gap-2 justify-center items-center px-2">
+                  <h1 className="border-l-[1px] border-accent flex gap-2 justify-center items-center px-2 max-md:border-none">
                     <span>Добавлен</span>
                     {new Date(torrent.uploaded_timestamp * 1000).getMonth() + 1}
                     /{new Date(torrent.uploaded_timestamp * 1000).getDate()}/
-                    {new Date(torrent.uploaded_timestamp * 1000).getFullYear()},{" "}
-                    {new Date(torrent.uploaded_timestamp * 1000).getHours()}:
+                    {new Date(torrent.uploaded_timestamp * 1000).getFullYear()}
+                    {/* {new Date(torrent.uploaded_timestamp * 1000).getHours()}:
                     {String(
                       new Date(torrent.uploaded_timestamp * 1000).getMinutes()
-                    ).padStart(2, "0")}
+                    ).padStart(2, "0")} */}
                   </h1>
                   <div className="border-l-[1px] border-accent pl-2 flex justify-center items-center">
                     <Link to={"https://www.anilibria.tv/" + torrent.url}>

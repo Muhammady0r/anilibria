@@ -3,13 +3,16 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr) 2fr;
   overflow: hidden;
-  &__link {
+  &__link,
+  &__menu {
     padding: 14px;
     font-size: 12.2pt;
     font-weight: 500;
     background: transparent;
     text-transform: uppercase;
     text-align: center;
+    outline: none;
+    border: none;
 
     transition: all 0.2s;
     &:hover {
@@ -21,5 +24,21 @@
     background: #cf2525;
     color: white;
     font-weight: 700;
+  }
+}
+
+@media (max-width: 888px) {
+  .header {
+    &__link {
+      display: none;
+    }
+  }
+}
+
+@media (min-width: 888px) {
+  .header {
+    &__menu {
+      display: none !important;
+    }
   }
 }

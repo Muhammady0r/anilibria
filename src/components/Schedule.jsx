@@ -27,7 +27,7 @@ const Schedule = () => {
     "Вторник",
     "Среда",
     "Четверг",
-    "Пятницв",
+    "Пятница",
     "Суббота",
     "Воскресенье",
   ];
@@ -76,7 +76,7 @@ const Schedule = () => {
               <div className="bg-accent rounded" ref={dayRefs[i]}>
                 <h1 className="text-xl">{weekdays[res.day]}</h1>
               </div>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-4 gap-3 max-md:grid-cols-3 max-sm:grid-cols-2">
                 {res.list.map((title, i) => {
                   return <TitleCard data={title} torrentsUrl key={i} />;
                 })}

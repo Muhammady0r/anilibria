@@ -15,7 +15,7 @@ const Donate = () => {
   return (
     <>
       <div>
-        <Card className={"p-4 pt-6 grid grid-cols-2"}>
+        <Card className={"p-4 pt-6 grid grid-cols-2 max-md:grid-cols-1"}>
           <iframe
             width={"100%"}
             height={"210px"}

@@ -4,20 +4,33 @@
   grid-template-columns: repeat(6, 1fr) 2fr;
   overflow: hidden;
 }
-.header__link {
+.header__link, .header__menu {
   padding: 14px;
   font-size: 12.2pt;
   font-weight: 500;
   background: transparent;
   text-transform: uppercase;
   text-align: center;
+  outline: none;
+  border: none;
   transition: all 0.2s;
 }
-.header__link:hover {
+.header__link:hover, .header__menu:hover {
   box-shadow: inset 0 -20px 25px -20px #fff;
 }
 .header .active {
   background: #cf2525;
   color: white;
   font-weight: 700;
+}
+
+@media (max-width: 888px) {
+  .header__link {
+    display: none;
+  }
+}
+@media (min-width: 888px) {
+  .header__menu {
+    display: none !important;
+  }
 }/*# sourceMappingURL=Header.css.map */

@@ -19,9 +19,6 @@ import { Input } from "@/components/ui/input";
 import UpdCard from "./UpdCard/UpdCard";
 
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { buttonVariants } from "./ui/button";
-
-import "ldrs/grid";
 
 const UpdatesList = () => {
   const [search, setSearch] = useState("");
@@ -31,7 +28,9 @@ const UpdatesList = () => {
   const { data, isLoading, isFetching } = useQuery(
     "updates",
     () => {
-      return axios("https://api.anilibria.tv/v3/title/updates");
+      return axios(
+        "https://api.anilibria.tv/v3/title/updates?items_per_page=14"
+      );
     },
     {
       refetchInterval: 30000,
@@ -63,7 +62,7 @@ const UpdatesList = () => {
     );
 
   return (
-    <div className="min-w-[300px] top-0">
+    <div className="min-w-[300px] top-0 max-md:min-w-0">
       <Card>
         <CardContent className="flex flex-col p-2 gap-2 relative">
           <Input
@@ -106,7 +105,12 @@ const UpdatesList = () => {
           <div className="max-[1220px]:flex gap-2 overflow-auto">
             {data.data.list.map((title, i) => {
               return (
-                <UpdCard data={title} torrentsUrl key={i} className={"mb-2"} />
+                <UpdCard
+                  data={title}
+                  torrentsUrl
+                  key={i}
+                  className={`mb-2 ${i > 5 ? "md:hidden" : ""}`}
+                />
               );
             })}
           </div>

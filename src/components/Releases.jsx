@@ -289,7 +289,7 @@ const Releases = () => {
         </AlertTitle>
       </Alert>
       <Card className={""}>
-        <CardHeader className="flex flex-row w-full gap-2 justify-between items-end">
+        <CardHeader className="flex flex-row w-full gap-2 justify-between items-end max-md:flex-col">
           <Select
             options={genres}
             onChange={(e) => {
@@ -298,7 +298,7 @@ const Releases = () => {
             styles={colorStyles}
             isMulti
             placeholder="Выбрать жанры"
-            className="w-[50%] my-react-select-container"
+            className="w-[50%] my-react-select-container max-md:w-full"
             classNamePrefix="my-react-select"
           />
           <Select
@@ -309,7 +309,7 @@ const Releases = () => {
             styles={colorStyles}
             isMulti
             placeholder="Год"
-            className="w-[27.5%] my-react-select-container"
+            className="w-[27.5%] my-react-select-container max-md:w-full"
             classNamePrefix="my-react-select"
           />
           <Select
@@ -320,11 +320,11 @@ const Releases = () => {
             styles={colorStyles}
             isMulti
             placeholder="Сезон"
-            className="w-[22.5%] my-react-select-container"
+            className="w-[22.5%] my-react-select-container max-md:w-full"
             classNamePrefix="my-react-select"
           />
         </CardHeader>
-        <CardContent className="flex gap-6">
+        <CardContent className="flex gap-6 max-md:gap-2 max-[480px]:flex-col">
           <div
             className="relative bg-background p-2 pt-2.5 text-center overflow-hidden rounded border border-accent cursor-pointer select-none hover:bg-accent"
             onClick={() => {
@@ -377,7 +377,7 @@ const Releases = () => {
       <br />
       {getPagination()}
       <div
-        className={`grid grid-cols-3 py-2 gap-2 transition-all ${
+        className={`grid grid-cols-3 py-2 gap-2 transition-all max-md:grid-cols-2 ${
           isFetching ? "blur-xl pointer-events-none" : ""
         }`}
       >

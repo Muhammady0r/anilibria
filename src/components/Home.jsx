@@ -21,7 +21,7 @@ const Home = () => {
     );
 
   return (
-    <div className="grid grid-cols-2 gap-2 p-2 transition-all max-[1220px]:p-0">
+    <div className="grid grid-cols-2 gap-2 transition-all max-sm:grid-cols-1">
       {data.data.list.map((video, i) => {
         return (
           <div

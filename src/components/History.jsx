@@ -38,7 +38,7 @@ const History = () => {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-2 max-md:grid-cols-2">
         {data.data.map((title, i) => {
           return <TitleCard data={title} key={i} isHistory />;
         })}

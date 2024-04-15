@@ -40,9 +40,9 @@ const Titles = () => {
               `https://api.anilibria.tv/v3/title/search?year=${year}&season_code=${season}`
             )
             .then((res) => {
-              console.log(res.data.pagination);
               setPages(res.data.pagination.pages);
             });
+          1;
         }
       });
       return fetch;
@@ -71,8 +71,23 @@ const Titles = () => {
                   )}?year=${year}&season=${season}&page=${+page - 1}`
                 );
               }}
-              className={`${page <= 1 ? "hidden" : ""}`}
+              className={`${page <= 1 ? "hidden" : ""} cursor-pointer`}
             />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              onClick={() => {
+                nav(
+                  `${window.location.pathname.replaceAll(
+                    "#",
+                    ""
+                  )}?year=${year}&season=${season}`
+                );
+              }}
+              className={`${page <= 2 ? "hidden" : ""} cursor-pointer`}
+            >
+              1
+            </PaginationLink>
           </PaginationItem>
           <PaginationItem className={`${page <= 1 ? "hidden" : ""}`}>
             {+page <= 1 ? (
@@ -84,7 +99,11 @@ const Titles = () => {
             )}
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink className={"text-accent font-bold text-xl"}>
+            <PaginationLink
+              className={
+                "text-foreground mx-2 font-bold text-xl bg-accent cursor-not-allowed"
+              }
+            >
               {page}
             </PaginationLink>
           </PaginationItem>
@@ -98,6 +117,21 @@ const Titles = () => {
             )}
           </PaginationItem>
           <PaginationItem>
+            <PaginationLink
+              onClick={() => {
+                nav(
+                  `${window.location.pathname.replaceAll(
+                    "#",
+                    ""
+                  )}?year=${year}&season=${season}&page=${pages}`
+                );
+              }}
+              className={`${page < pages - 1 ? "" : "hidden"} cursor-pointer`}
+            >
+              {pages}
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
             <PaginationNext
               onClick={() => {
                 nav(
@@ -107,7 +141,7 @@ const Titles = () => {
                   )}?year=${year}&season=${season}&page=${+page + 1}`
                 );
               }}
-              className={`${page == pages ? "hidden" : ""}`}
+              className={`${page == pages ? "hidden" : ""} cursor-pointer`}
             />
           </PaginationItem>
         </PaginationContent>
@@ -119,7 +153,7 @@ const Titles = () => {
     return (
       <>
         <div className="w-full h-[50vh] flex justify-center items-center">
-          <l-grid size="100" speed="1.5" color="red"></l-grid>
+          <div className="spinner"></div>
         </div>
       </>
     );
@@ -132,11 +166,11 @@ const Titles = () => {
           return (
             <Card
               className={
-                "p-4 flex gap-4 justify-between items-center overflow-hidden"
+                "relative p-4 flex gap-4 justify-between items-center overflow-hidden max-md:flex-col"
               }
               key={i}
             >
-              <div className="p-4 self-start">
+              <div className="p-4 self-start max-md:order-1">
                 <h1 className="text-center text-lg font-bold">
                   {title.names.ru}
                 </h1>
@@ -156,14 +190,25 @@ const Titles = () => {
                 </p>
               </div>
 
+              <Link to={`/release/${title.code}`}>
+                <img
+                  src={`https://www.anilibria.tv/${title.posters.original.url}`}
+                  className="rounded h-full"
+                  alt=""
+                />
+              </Link>
               <img
                 src={`https://www.anilibria.tv/${title.posters.original.url}`}
-                className="opacity-70 transition-all cursor-pointer hover:opacity-100 rounded"
-                onClick={() => {
-                  nav(`/release/${title.code}`);
-                }}
+                className="rounded h-full max-md:hidden"
+                // onClick={() => {
+                //   nav(`/release/${title.code}`);
+                // }}
                 alt=""
               />
+              <Link
+                to={`/release/${title.code}`}
+                className="absolute right-0 top-0 h-full w-[40%] max-md:hidden"
+              ></Link>
             </Card>
           );
         })}

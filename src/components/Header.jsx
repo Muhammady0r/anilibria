@@ -4,6 +4,15 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Header/Header.css";
 import axios from "axios";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const Header = () => {
   const nav = useNavigate();
 
@@ -17,7 +26,89 @@ const Header = () => {
 
   return (
     <>
+      {/* <Menubar className={"header border-accent"}>
+        <MenubarMenu>
+          <MenubarTrigger className={"header__trigger"}>Меню</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/"}>
+                Главное
+              </NavLink>
+            </MenubarItem>
+            <MenubarItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/catalog"}>
+                Релизы
+              </NavLink>
+            </MenubarItem>
+            <MenubarItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/schedule"}>
+                Расписание
+              </NavLink>
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"https://anilibria.app/"}>
+                Приложение
+              </NavLink>
+            </MenubarItem>
+            <MenubarItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/donate"}>
+                Поддержать проект
+              </NavLink>
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/history"}>
+                История
+              </NavLink>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar> */}
+
       <div className="header rounded">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="header__menu flex justify-center items-center gap-1">
+            <i className="fa-solid fa-bars fa-lg"></i> Меню
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {/* <DropdownMenuLabel>Меню</DropdownMenuLabel>
+            <DropdownMenuSeparator /> */}
+            <DropdownMenuItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/"}>
+                Главное
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/catalog"}>
+                Релизы
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/schedule"}>
+                Расписание
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"https://anilibria.app/"}>
+                Приложение
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/donate"}>
+                Поддержать проект
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className={"p-0"}>
+              <NavLink className={"p-2 w-full"} to={"/history"}>
+                История просмотра
+              </NavLink>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <NavLink className="header__link" to={"/"}>
           Главная
         </NavLink>

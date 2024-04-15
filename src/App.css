@@ -16,9 +16,8 @@ body {
 }
 
 .hide-a {
-  pointer-events: none;
-  opacity: 0;
-  display: none;
+  pointer-events: none !important;
+  opacity: 0 !important;
 }
 
 .bg-none {
