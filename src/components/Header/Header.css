@@ -1,7 +1,7 @@
 .header {
   background: linear-gradient(to right, #cf2525, #460c0c);
   display: grid;
-  grid-template-columns: repeat(5, 1fr) 1.5fr;
+  grid-template-columns: repeat(6, 1fr) 2fr;
   overflow: hidden;
 }
 .header__link {

@@ -12,8 +12,6 @@ import {
 
 import "ldrs/grid";
 
-import { Button, buttonVariants } from "./ui/button";
-
 import Player from "./Player";
 
 const Title = () => {
@@ -34,9 +32,6 @@ const Title = () => {
     "title-full",
     () => {
       const req = axios(`https://api.anilibria.tv/v3/title?code=${param.code}`);
-      // req.then((res) => {
-      //   console.log(res.data.franchises);
-      // });
       return req;
     },
     {
@@ -71,19 +66,24 @@ const Title = () => {
   if (isLoading || isFetching)
     return (
       <div className="w-full h-[50vh] flex justify-center items-center">
-        <l-grid size="100" speed="1.5" color="red"></l-grid>
+        <div className="spinner"></div>
       </div>
     );
 
   return (
-    // <div className="sticky top-2 h-[98vh]">
     <div>
-      <Card className="overflow-auto">
+      <Card className="relative overflow-clip p-0">
+        <img
+          src={`https://www.anilibria.tv/${data.data.posters.original.url}`}
+          alt=""
+          className="top-0 right-0 absolute z-[0] blur-sm object-cover w-1/2 h-[49%] opacity-50 max-md:w-full max-md:h-[34%]"
+        />
+        <div className="top-0 right-0 absolute z-[0] w-[55%] h-[50%] poster max-md:w-full max-md:h-[35%]"></div>
         <CardHeader
-          className={"grid gap-4"}
+          className={"relative z-[1] grid gap-4 max-md:flex max-md:py-0"}
           style={{ gridTemplateColumns: "2fr 1.25fr" }}
         >
-          <div>
+          <div className="max-md:order-1 max-md:mt-4">
             <h1 className="text-center text-xs text-muted">
               ID: {data.data.id}
             </h1>
@@ -145,7 +145,7 @@ const Title = () => {
             <div className="border w-full mt-2 mb-2"></div>
             <p>{data.data.description}</p>
             {data.data.franchises.length > 0 && (
-              <Card className={"mt-2 p-4"}>
+              <div className={"bg-muted/50 rounded mt-2 p-4"}>
                 <p className="text-xs">Порядок просмотра</p>
                 <h1 className="text-lg font-bold">
                   {data.data.franchises[0].franchise.name}
@@ -176,12 +176,12 @@ const Title = () => {
                     );
                   })}
                 </div>
-              </Card>
+              </div>
             )}
           </div>
-          <div className="relative rounded overflow-hidden">
+          <div className="relative rounded overflow-hidden max-md:h-[400px] max-md:overflow-visible">
             <div
-              className={`absolute m-[2%] w-[96%] backdrop-blur-lg p-1 text-center rounded ${
+              className={`absolute m-[2%] w-[96%] backdrop-blur-lg p-1 text-center rounded max-md:hidden ${
                 data.data.announce == null ? "cursor-pointer" : ""
               } ${data.data.status.code == 2 ? "hidden" : ""}`}
               style={{ background: "#12121299" }}
@@ -205,14 +205,14 @@ const Title = () => {
             <img
               src={`https://www.anilibria.tv/${data.data.posters.original.url}`}
               alt=""
-              className="w-full rounded shadow shadow-accent"
+              className="w-full rounded max-md:h-full max-md:w-auto max-md:m-auto"
             />
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className={"relative z-[1]"}>
           <Player data={data.data} />
         </CardContent>
-        <CardFooter className={``}>
+        <CardFooter className={`relative z-[1] `}>
           <div
             className={`flex flex-col bg-muted w-full rounded overflow-hidden text-sm text-left`}
           >

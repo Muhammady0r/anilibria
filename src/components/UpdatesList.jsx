@@ -56,14 +56,14 @@ const UpdatesList = () => {
   if (isLoading)
     return (
       <div className="flex w-full">
-        <Card className={"w-full flex items-center justify-center"}>
-          <l-helix size="45" speed="2.5" color="red"></l-helix>
+        <Card className={"w-full flex items-center justify-center py-2"}>
+          <div className="spinner"></div>
         </Card>
       </div>
     );
 
   return (
-    <div className="min-w-[300px] sticky top-0">
+    <div className="min-w-[300px] top-0">
       <Card>
         <CardContent className="flex flex-col p-2 gap-2 relative">
           <Input
@@ -103,11 +103,13 @@ const UpdatesList = () => {
                 );
               })}
           </div>
-          {data.data.list.map((title, i) => {
-            return (
-              <UpdCard data={title} torrentsUrl key={i} className={"mb-2"} />
-            );
-          })}
+          <div className="max-[1220px]:flex gap-2 overflow-auto">
+            {data.data.list.map((title, i) => {
+              return (
+                <UpdCard data={title} torrentsUrl key={i} className={"mb-2"} />
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
     </div>

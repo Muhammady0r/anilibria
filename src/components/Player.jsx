@@ -18,8 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import "ldrs/quantum";
-
 // import { HideOnMouseStop } from "react-hide-on-mouse-stop";
 
 import { Slider } from "./ui/slider";
@@ -31,6 +29,8 @@ const Player = ({ data }) => {
   const [isOpening, setIsOpening] = useState(false);
   const [playing, setPlaying] = useState(false);
 
+  const [conTimeout, setConTimeout] = useState(null);
+
   const [light, setLight] = useState(true);
 
   const [currentTime, setCurrentTime] = useState(0);
@@ -38,6 +38,7 @@ const Player = ({ data }) => {
   const [maxTime, setMaxTime] = useState(0);
 
   const [controls, setControls] = useState(false);
+  const [lockControls, setLockControls] = useState(false);
 
   const [speed, setSpeed] = useState(
     localStorage.getItem("playSpeed") == null
@@ -65,10 +66,14 @@ const Player = ({ data }) => {
 
   const [playlist, setPlaylist] = useState(false);
 
+  const playlistRef = useRef(null);
+
   // settings
   const [settings, setSettings] = useState(false);
   const [speedS, setSpeedS] = useState(false);
   const [qualityS, setQualityS] = useState(false);
+
+  const settingsRef = useRef(null);
 
   useEffect(() => {
     setEpisodes(
@@ -82,6 +87,23 @@ const Player = ({ data }) => {
     }
 
     setEpisode(+localStorage.getItem(`${data.id}`));
+
+    const handle = (e) => {
+      if (!settingsRef.current?.contains(e.target)) {
+        setSettings(false);
+        setSpeedS(false);
+        setQualityS(false);
+      }
+      if (!playlistRef.current?.contains(e.target)) {
+        setPlaylist(false);
+      }
+    };
+
+    document.body.addEventListener("mousedown", handle);
+
+    return () => {
+      document.body.removeEventListener("mousedown", handle);
+    };
   }, []);
 
   useEffect(() => {
@@ -116,7 +138,7 @@ const Player = ({ data }) => {
     return (
       <>
         <div className="w-full mt-12 flex justify-center items-center">
-          <l-helix size="45" speed="2.5" color="red"></l-helix>
+          <div className="spinner"></div>
         </div>
       </>
     );
@@ -173,9 +195,19 @@ const Player = ({ data }) => {
       {!data.player.is_rutube && (
         <>
           <div
-            className={`w-full flex justify-center items-center relative rounded-md overflow-hidden border border-accent mt-2 ${
+            className={`w-full flex justify-center items-center overflow-hidden relative rounded-md mt-2 ${
               fullscreen ? "m-0 rounded-none h-full border-none" : ""
-            }`}
+            } ${controls ? "" : "cursor-none"}`}
+            onMouseMove={() => {
+              const hideTimeout = () => {
+                setControls(false);
+              };
+
+              clearTimeout(conTimeout);
+              setControls(true);
+
+              setConTimeout(setTimeout(hideTimeout, 2000));
+            }}
           >
             <FullScreen
               handle={handleFS}
@@ -185,6 +217,7 @@ const Player = ({ data }) => {
               className={`${light ? "absolute" : ""} w-full h-full`}
             >
               <div className={`relative h-full`}>
+                {/* Player */}
                 <span className={`${playing ? "" : "opacity-60 blur-[2.5px]"}`}>
                   <ReactPlayer
                     url={`https://${data.player.host}${episodes[episode]?.hls[vidQuality]}`}
@@ -267,6 +300,16 @@ const Player = ({ data }) => {
                     onPause={() => {
                       setPlaying(false);
                     }}
+                    onClickPreview={() => {
+                      let history = localStorage.getItem("history");
+                      history = history == null ? [] : history.split(",");
+                      if (history.includes(`${data.id}`)) {
+                        history.splice(history.indexOf(`${data.id}`), 1);
+                      }
+                      history.unshift(data.id);
+                      localStorage.setItem("history", history);
+                      console.log(history);
+                    }}
                   />
                 </span>
 
@@ -283,13 +326,16 @@ const Player = ({ data }) => {
                   >
                     <div
                       className={`scale-[1.75] bg-black/30 backdrop-blur-sm blur-[1px] h-10 w-10 rounded-full flex justify-center items-center transition-all ${
-                        playing ? "scale-[0.5] opacity-0" : ""
+                        playing || (controls && !lockControls)
+                          ? "scale-[0.5] opacity-0"
+                          : ""
                       }`}
                     >
                       <i className="fa-solid fa-pause fa-xl text-accent"></i>
                     </div>
                   </div>
 
+                  {/* Skip opening */}
                   <div
                     className={`${
                       isOpening ? "" : "hide-a"
@@ -318,23 +364,13 @@ const Player = ({ data }) => {
                     </Button>
                   </div>
 
-                  {/* <HideOnMouseStop
-                    delay={1000}
-                    defaultTransition
-                    showOnlyOnContainerHover
-                  > */}
+                  {/* Controls */}
                   <div
-                    className={`absolute top-0 left-0 w-full h-full transition-all ${
-                      controls ? "hide-a opacity-10" : ""
+                    className={`w-full h-full transition-all ${
+                      !controls || lockControls ? "hide-a opacity-10" : ""
                     }`}
                   >
-                    <div
-                      onClick={() => {
-                        setPlaying((prev) => !prev);
-                      }}
-                      className="absolute top-0 left-0 w-full h-full"
-                    ></div>
-
+                    {/* PLaylist */}
                     <div
                       className={`${buttonVariants({
                         variant: "outline",
@@ -349,6 +385,7 @@ const Player = ({ data }) => {
                       className={`flex flex-col gap-1 absolute max-h-[60%] overflow-auto bg-background z-50 top-1/2 -translate-y-1/2 p-1 rounded border border-accent transition-all pointer-events-auto left-1 ${
                         playlist ? "" : "hide-a"
                       }`}
+                      ref={playlistRef}
                     >
                       {[...new Array(data.player.episodes.last)].map((_, i) => {
                         return (
@@ -363,6 +400,7 @@ const Player = ({ data }) => {
                               localStorage.setItem(`${data.id}`, i);
                               setCurrentTime(0);
                               setEpisode(i);
+                              setPlaylist(false);
                             }}
                           >
                             Серия {i + 1}
@@ -371,6 +409,7 @@ const Player = ({ data }) => {
                       })}
                     </div>
 
+                    {/* Main controls */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center gap-6">
                       <Button
                         variant={"secondary"}
@@ -439,6 +478,7 @@ const Player = ({ data }) => {
                       </Button>
                     </div>
 
+                    {/* Episod info */}
                     <h1
                       className={`absolute top-1 left-1 rounded px-1 text-xl transition-all bg-background`}
                     >
@@ -449,18 +489,9 @@ const Player = ({ data }) => {
                       : <b>{episodes[episode].name}</b>
                     </h1>
 
+                    {/* Bottom controls */}
                     <div
-                      className={`absolute w-full h-full top-0 left-0 z-20 ${
-                        settings || playlist ? "" : "hidden"
-                      }`}
-                      onMouseOver={() => {
-                        setSettings(false);
-                        setPlaylist(false);
-                      }}
-                    ></div>
-
-                    <div
-                      className={`absolute bottom-0 rounded w-[99%] m-[0.5%] h-16 bg-background px-4 py-2 transition-all z-20`}
+                      className={`absolute bottom-0 rounded w-[99%] m-[0.5%] bg-background px-4 py-2 transition-all z-20 grid gap-6`}
                     >
                       <VideoSeekSlider
                         max={maxTime}
@@ -468,85 +499,96 @@ const Player = ({ data }) => {
                         bufferTime={progress}
                         onChange={handleTimeChange}
                         limitTimeTooltipBySides={true}
-                        className={"relative z-30"}
                       />
-                      <div className="relative h-full flex justify-between items-end">
-                        <h1 className="absolute bottom-0 left-0">
+
+                      <div className="relative flex justify-between">
+                        {/* Current video position */}
+                        <h1 className="">
                           {currentTime == 0 || isNaN(currentTime)
                             ? "00:00"
                             : timeConvert(currentTime)}{" "}
                           / {timeConvert(maxTime)}
                         </h1>
 
-                        <div
-                          className="absolute bottom-0 right-2 cursor-pointer"
-                          onClick={() => {
-                            setSettings((prev) => !prev);
-                            setSpeedS(false);
-                            setQualityS(false);
-                          }}
-                        >
-                          <i className="fa-solid fa-gear"></i>
-                        </div>
-
-                        <div
-                          className={
-                            "absolute bottom-0 right-10 cursor-pointer"
-                          }
-                          onClick={() => {
-                            if (fullscreen) handleFS.exit();
-                            else handleFS.enter();
-                          }}
-                        >
-                          {fullscreen ? (
-                            <i className="fa-solid fa-down-left-and-up-right-to-center"></i>
-                          ) : (
-                            <i className="fa-solid fa-up-right-and-down-left-from-center"></i>
-                          )}
-                        </div>
-
-                        <div
-                          className="absolute bottom-0 right-[70px] cursor-pointer"
-                          onClick={() => {
-                            setPipMode((prev) => !prev);
-                          }}
-                        >
-                          <i className="fa-solid fa-minimize "></i>
-                        </div>
-
-                        <div
-                          className={
-                            "absolute bottom-0 right-24 flex gap-2 justify-center items-center cursor-pointer"
-                          }
-                        >
+                        {/* Buttons */}
+                        <div className="flex gap-4">
+                          {/* Volume */}
                           <div
-                            className="cursor-pointer"
+                            className={
+                              " bottom-0 right-24 flex gap-2 justify-center items-center cursor-pointer"
+                            }
+                          >
+                            <div
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setMuted((prev) => !prev);
+                              }}
+                            >
+                              {!muted ? (
+                                <i className="fa-solid fa-volume-high"></i>
+                              ) : (
+                                <i className="fa-solid fa-volume-xmark"></i>
+                              )}
+                            </div>
+                            <Slider
+                              className={"w-32"}
+                              defaultValue={[1]}
+                              max={1}
+                              step={0.01}
+                              onValueChange={(e) => {
+                                setVol(e[0]);
+                              }}
+                            />
+                          </div>
+
+                          {/* Pip */}
+                          <div
+                            className=" bottom-0 right-[70px] cursor-pointer"
                             onClick={() => {
-                              setMuted((prev) => !prev);
+                              setPipMode((prev) => !prev);
                             }}
                           >
-                            {!muted ? (
-                              <i className="fa-solid fa-volume-high"></i>
+                            <i className="fa-solid fa-minimize "></i>
+                          </div>
+
+                          {/* Fullscreen */}
+                          <div
+                            className={" bottom-0 right-10 cursor-pointer"}
+                            onClick={() => {
+                              if (fullscreen) handleFS.exit();
+                              else handleFS.enter();
+                            }}
+                          >
+                            {fullscreen ? (
+                              <i className="fa-solid fa-down-left-and-up-right-to-center"></i>
                             ) : (
-                              <i className="fa-solid fa-volume-xmark"></i>
+                              <i className="fa-solid fa-up-right-and-down-left-from-center"></i>
                             )}
                           </div>
-                          <Slider
-                            className={"w-32"}
-                            defaultValue={[1]}
-                            max={1}
-                            step={0.01}
-                            onValueChange={(e) => {
-                              setVol(e[0]);
+
+                          {/* Settings */}
+                          <div
+                            className={`bottom-0 right-2 cursor-pointer ${
+                              settings ? "pointer-events-none" : ""
+                            }`}
+                            onClick={() => {
+                              setSettings((prev) => !prev);
+                              setSpeedS(false);
+                              setQualityS(false);
                             }}
-                          />
+                          >
+                            <i className="fa-solid fa-gear"></i>
+                          </div>
                         </div>
 
+                        {/* Settings menu */}
                         <div
-                          className={`absolute bg-background border border-accent rounded p-2 right-0 bottom-6 flex flex-col gap-2 transition-all z-30 ${
+                          className={`absolute bg-background border border-accent rounded p-2 -right-4 bottom-6 flex flex-col gap-2 transition-all z-30 ${
                             settings ? "" : "hide-a"
                           }`}
+                          ref={settingsRef}
                         >
+                          {/* Skip */}
                           <div
                             className={"flex gap-2 justify-center items-center"}
                           >
@@ -568,6 +610,7 @@ const Player = ({ data }) => {
                             </label>
                           </div>
 
+                          {/* Speed */}
                           <div
                             className="flex justify-between items-center p-0 cursor-pointer"
                             onClick={() => {
@@ -606,6 +649,7 @@ const Player = ({ data }) => {
                             )}
                           </div>
 
+                          {/* Quality */}
                           <div
                             className="flex justify-between items-center p-0 cursor-pointer"
                             onClick={() => {
@@ -656,33 +700,28 @@ const Player = ({ data }) => {
                       </div>
                     </div>
                   </div>
-                  <div
-                    className={`absolute top-0 left-0 w-full h-[10%] transition-all`}
+                  <Button
+                    variant={"outline"}
+                    className={`absolute top-1 left-1/2 -translate-x-1/2 w-8 h-8 pointer-events-auto ${
+                      controls ? "" : "hide-a"
+                    }`}
+                    onClick={() => {
+                      setLockControls((prev) => !prev);
+                    }}
                   >
-                    <Button
-                      variant={"outline"}
-                      className={
-                        "absolute top-1 left-1/2 -translate-x-1/2 w-8 h-8 pointer-events-auto"
-                      }
-                      onClick={() => {
-                        setControls((prev) => !prev);
-                      }}
-                    >
-                      {controls ? (
-                        <i className="fa-solid fa-lock"></i>
-                      ) : (
-                        <i className="fa-solid fa-lock-open"></i>
-                      )}
-                    </Button>
-                  </div>
-                  {/* </HideOnMouseStop> */}
+                    {lockControls ? (
+                      <i className="fa-solid fa-lock"></i>
+                    ) : (
+                      <i className="fa-solid fa-lock-open"></i>
+                    )}
+                  </Button>
 
                   <div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none ${
                       buffering ? "" : "hide-a"
                     }`}
                   >
-                    <l-quantum size="65" speed="2" color="red"></l-quantum>
+                    <div className="spinner"></div>
                   </div>
                 </div>
               </div>
@@ -690,7 +729,6 @@ const Player = ({ data }) => {
 
             <img
               src="https://www.anilibria.tv/img/pleer2.jpg"
-              // src="https://raw.github.com/Muhammady0r/meedweff-cloud/master/roms/hyperos-1.0.1.0.2-eu-post-a13-ayan_xe/poster.jpg"
               className={`w-full ${light ? "" : "hidden"}`}
               alt=""
             />

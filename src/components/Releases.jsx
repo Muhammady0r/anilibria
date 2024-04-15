@@ -35,6 +35,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import TitleCard from "./TitleCard";
 
 const Releases = () => {
   const [genres, setGenres] = useState([]);
@@ -55,6 +56,7 @@ const Releases = () => {
   const props = useSearchParams()[0];
 
   const [sortByFav, setSort] = useState(true);
+  const [finished, setFinished] = useState(false);
 
   const page = props.get("page") ? props.get("page") : "1";
 
@@ -91,12 +93,9 @@ const Releases = () => {
                 )
                 .join("")
             : ""
-        }
-          &order_by=${
-            sortByFav ? "in_favorites" : "updated"
-          }&sort_direction=1&items_per_page=12${
-          page > 1 ? `&page=${page}` : ""
-        }`
+        }${finished ? " and {status.code} == 2" : ""}&order_by=${
+          sortByFav ? "in_favorites" : "updated"
+        }&sort_direction=1&items_per_page=12${page > 1 ? `&page=${page}` : ""}`
       );
 
       fetch.then((res) => {
@@ -107,7 +106,9 @@ const Releases = () => {
     },
     {
       refetchOnWindowFocus: false,
-      cacheTime: 30000,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      cacheTime: 500000,
     }
   );
 
@@ -189,8 +190,8 @@ const Releases = () => {
 
   if (isLoading && genresLoading && yearsLoading)
     return (
-      <div className="upd-list flex w-full">
-        <l-helix size="45" speed="2.5" color="red"></l-helix>
+      <div className="flex items-center justify-center py-4 w-full">
+        <div className="spinner"></div>
       </div>
     );
 
@@ -283,7 +284,9 @@ const Releases = () => {
     <div className="">
       <Alert className={"my-2"}>
         <RocketIcon className="h-4 w-4" />
-        <AlertTitle>Страница ещё в разработке!</AlertTitle>
+        <AlertTitle>
+          Cтраница ещё в разработке! (Надеюсь что уже нет 😑)
+        </AlertTitle>
       </Alert>
       <Card className={""}>
         <CardHeader className="flex flex-row w-full gap-2 justify-between items-end">
@@ -295,7 +298,8 @@ const Releases = () => {
             styles={colorStyles}
             isMulti
             placeholder="Выбрать жанры"
-            className="w-[50%]"
+            className="w-[50%] my-react-select-container"
+            classNamePrefix="my-react-select"
           />
           <Select
             options={years}
@@ -305,7 +309,8 @@ const Releases = () => {
             styles={colorStyles}
             isMulti
             placeholder="Год"
-            className="w-[27.5%]"
+            className="w-[27.5%] my-react-select-container"
+            classNamePrefix="my-react-select"
           />
           <Select
             options={seasons}
@@ -315,7 +320,8 @@ const Releases = () => {
             styles={colorStyles}
             isMulti
             placeholder="Сезон"
-            className="w-[22.5%]"
+            className="w-[22.5%] my-react-select-container"
+            classNamePrefix="my-react-select"
           />
         </CardHeader>
         <CardContent className="flex gap-6">
@@ -323,10 +329,11 @@ const Releases = () => {
             className="relative bg-background p-2 pt-2.5 text-center overflow-hidden rounded border border-accent cursor-pointer select-none hover:bg-accent"
             onClick={() => {
               setSort((prev) => !prev);
+              setTimeout(refetch, 50);
             }}
           >
             <h1
-              className={`absolute bg-black h-full w-full top-0 left-0 transition-all flex justify-center items-center ${
+              className={`absolute bg-background h-full w-full top-0 left-0 transition-all flex justify-center items-center ${
                 sortByFav ? "translate-x-full" : ""
               } hover:bg-accent`}
             >
@@ -344,7 +351,7 @@ const Releases = () => {
           >
             {isFetching ? (
               <>
-                <l-grid size="30" speed="1.5" color={"red"}></l-grid>
+                <div className="spinner spinner-sm"></div>
               </>
             ) : (
               <>
@@ -356,7 +363,13 @@ const Releases = () => {
             className={`bg-background p-2 text-center overflow-hidden rounded border border-accent cursor-pointer select-none flex justify-center items-center gap-2 hover:bg-red-600`}
             htmlFor="finished"
           >
-            <Checkbox id="finished" />
+            <Checkbox
+              id="finished"
+              onCheckedChange={(e) => {
+                setFinished(e);
+                setTimeout(refetch, 50);
+              }}
+            />
             Релиз завершён
           </label>
         </CardContent>
@@ -369,7 +382,7 @@ const Releases = () => {
         }`}
       >
         {data?.data?.list?.map((title, i) => {
-          return <UpdCard data={title} key={i} />;
+          return <TitleCard data={title} key={i} />;
         })}
       </div>
       {getPagination()}

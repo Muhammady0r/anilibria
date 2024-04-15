@@ -6,7 +6,11 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <div className="footer container mt-4">
-      <Card className={"p-4 grid grid-cols-3"}>
+      <Card
+        className={
+          "p-4 grid grid-cols-3 max-md:flex flex-col max-md:gap-4 max-md:text-center max-md:justify-center max-md:items-center"
+        }
+      >
         <div className="flex gap-2">
           <Link to={"http://www.animespirit.ru/"}>
             <img src="https://www.anilibria.tv/img/button/1.jpg" alt="" />

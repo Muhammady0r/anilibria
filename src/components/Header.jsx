@@ -37,6 +37,9 @@ const Header = () => {
         >
           Приложение
         </Link>
+        <NavLink className="header__link" to={"/history"}>
+          История
+        </NavLink>
         <NavLink className="header__link" to={"/donate"}>
           Поддержать проект
         </NavLink>

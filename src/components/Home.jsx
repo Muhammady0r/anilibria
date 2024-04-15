@@ -16,26 +16,33 @@ const Home = () => {
   if (isLoading)
     return (
       <div className="w-full h-[50vh] flex justify-center items-center">
-        <l-grid size="100" speed="1.5" color="red"></l-grid>
+        <div className="spinner"></div>
       </div>
     );
 
   return (
-    <div className="grid grid-cols-2 gap-2 p-2 transition-all">
+    <div className="grid grid-cols-2 gap-2 p-2 transition-all max-[1220px]:p-0">
       {data.data.list.map((video, i) => {
         return (
-          <Link
-            to={`https://www.youtube.com/watch?v=${video.youtube_id}`}
+          <div
+            className="yt-vid relative opacity-60 transition-all hover:opacity-100 rounded overflow-hidden max-[1220px]:opacity-100"
             key={i}
-            className="opacity-60 transition-all hover:opacity-100 rounded overflow-hidden"
-            target="_blank"
           >
-            <img
-              src={`https://www.anilibria.tv/${video.preview.src}`}
-              alt=""
-              className="w-full"
-            />
-          </Link>
+            <Link
+              to={`https://www.youtube.com/watch?v=${video.youtube_id}`}
+              className=""
+              target="_blank"
+            >
+              <img
+                src={`https://www.anilibria.tv/${video.preview.src}`}
+                alt=""
+                className="w-full"
+              />
+              <span className="absolute left-0 bottom-0 h-1/2 w-full yt-title flex items-end p-2 justify-center">
+                <h1 className="text-sm text-center">{video.title}</h1>
+              </span>
+            </Link>
+          </div>
         );
       })}
     </div>

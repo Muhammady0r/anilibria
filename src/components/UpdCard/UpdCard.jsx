@@ -23,15 +23,17 @@ const UpdCard = ({ data, torrentsUrl, className }) => {
           : "opacity-70 hover:opacity-100"
       } ${className}`}
     >
-      <img
-        src={`https://www.anilibria.tv/${data.posters.original.url}`}
-        alt=""
-        className="w-full"
-      />
-      <div className="upd-overlay flex flex-col items-center text-center p-4 transition-all">
+      <Link to={`/release/${data.code}`}>
+        <img
+          src={`https://www.anilibria.tv/${data.posters.original.url}`}
+          alt=""
+          className="w-full"
+        />
+      </Link>
+      <span className="upd-overlay flex flex-col items-center text-center p-4 transition-all">
         <Link
           to={`/release/${data.code}`}
-          className="top-0 left-0 w-full h-full p-4"
+          className="top-0 left-0 w-full h-full p-4 max-[1220px]:flex flex-col justify-center items-center"
         >
           <h1 className="text-xs">{data.names.ru}</h1>
           <h2>Серия: {data.player.episodes.string}</h2>
@@ -40,14 +42,16 @@ const UpdCard = ({ data, torrentsUrl, className }) => {
         {torrentsUrl && data.torrents.list.length > 0 && (
           <>
             <Link
-              className={`${buttonVariants({ variant: "" })}`}
+              className={`${buttonVariants({
+                variant: "",
+              })} max-[1220px]:hidden`}
               to={`https://www.anilibria.tv${data.torrents.list[0].url}`}
             >
               Скачать
             </Link>
           </>
         )}
-      </div>
+      </span>
     </div>
   );
 };

@@ -12,5 +12,103 @@ body {
 }
 
 .app {
-  grid-template-columns: 5fr 1.5fr;
+  grid-template-columns: 3fr 1fr;
+}
+
+.hide-a {
+  pointer-events: none;
+  opacity: 0;
+  display: none;
+}
+
+.bg-none {
+  background: none !important;
+}
+
+.poster {
+  background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0) 70%,
+      rgba(9, 9, 11, 1) 90%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 60%,
+      rgba(9, 9, 11, 1) 90%
+    );
+}
+
+.yt-title {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(9, 9, 11, 1) 70%
+  );
+}
+
+.yt-vid > a > span {
+  transition: all 0.2s;
+  transform: translateY(50%);
+}
+
+.yt-vid:hover > a > span {
+  transform: translateY(0);
+}
+
+.yt-vid h1 {
+  text-shadow: 1px 1px 0px black, -1px -1px 0px black !important;
+}
+
+@media (max-width: 1220px) {
+  .yt-vid > a > span {
+    transform: translateY(0);
+  }
+  .app {
+    display: flex !important;
+    flex-direction: column;
+  }
+  .container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .poster {
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 60%,
+      rgba(9, 9, 11, 1) 90%
+    );
+  }
+}
+
+.spinner {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(farthest-side, #ff5447 94%, #0000) top/11.5px
+      11.5px no-repeat,
+    conic-gradient(#0000 30%, #ff5447);
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    #0000 calc(100% - 11.5px),
+    #000 0
+  );
+  animation: spinner-c7wet2 0.8s infinite linear;
+}
+
+.spinner-sm {
+  width: 25px;
+  height: 25px;
+  background: radial-gradient(farthest-side, #ff5447 94%, #0000) top/5px 5px
+      no-repeat,
+    conic-gradient(#0000 30%, #ff5447);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 0);
+}
+
+@keyframes spinner-c7wet2 {
+  100% {
+    transform: rotate(1turn);
+  }
 }

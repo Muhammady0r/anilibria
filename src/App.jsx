@@ -15,36 +15,20 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import Titles from "./components/Titles";
 
 import "ldrs/grid";
+import History from "./components/History";
 
 function App() {
   return (
     <>
-      <h1 className="absolute top-2 right-2 text-xs text-center z-[1]">
-        Это не оффициальный сайт Анилибрии. <br />
-        Офф{" "}
-        <a
-          href="https://anilibria.tv"
-          className="text-blue-500"
-          target="_blank"
-        >
-          Anilibria.tv
-        </a>
-      </h1>
-      <h1 className="absolute top-2 left-2 text-xs text-center z-[1]">
-        Фан копия сайта{" "}
-        <a href="https://anilibria.tv" className="text-blue-500">
-          Anilibria.tv
-        </a>
-      </h1>
       <div className="container relative">
         <img
           src="https://www.anilibria.tv/img/29.png"
           alt=""
-          className="w-full"
+          className="w-full max-md:h-[250px] max-md:object-cover"
         />
       </div>
       <div className="app container grid mt-2 gap-2">
-        <div>
+        <div className="max-[1220px]:order-1">
           <Header />
           <div className="w-full mb-2"></div>
           <Routes>
@@ -54,6 +38,7 @@ function App() {
             <Route path="/catalog" element={<Releases />} />
             <Route path="/donate" element={<Donate />} />
             <Route path="/fetch-titles" element={<Fetch />} />
+            <Route path="/history" element={<History />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>

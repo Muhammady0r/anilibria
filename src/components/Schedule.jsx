@@ -14,6 +14,7 @@ import "ldrs/grid";
 import axios from "axios";
 import UpdCard from "./UpdCard/UpdCard";
 import { useParams, useSearchParams } from "react-router-dom";
+import TitleCard from "./TitleCard";
 
 const Schedule = () => {
   const [params, setParams] = useSearchParams();
@@ -53,7 +54,7 @@ const Schedule = () => {
   if (isLoading)
     return (
       <div className="w-full h-[50vh] flex justify-center items-center">
-        <l-grid size="100" speed="1.5" color="red"></l-grid>
+        <div className="spinner"></div>
       </div>
     );
 
@@ -77,7 +78,7 @@ const Schedule = () => {
               </div>
               <div className="grid grid-cols-4 gap-3">
                 {res.list.map((title, i) => {
-                  return <UpdCard data={title} torrentsUrl key={i} />;
+                  return <TitleCard data={title} torrentsUrl key={i} />;
                 })}
               </div>
             </div>
