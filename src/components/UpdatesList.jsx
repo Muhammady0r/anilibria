@@ -12,7 +12,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 import "ldrs/helix";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Input } from "@/components/ui/input";
 
@@ -21,6 +21,8 @@ import UpdCard from "./UpdCard/UpdCard";
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
 const UpdatesList = () => {
+  const location = useLocation();
+
   const [search, setSearch] = useState("");
 
   const searchInput = useRef(null);
@@ -54,32 +56,59 @@ const UpdatesList = () => {
 
   if (isLoading)
     return (
-      <div className="flex w-full">
-        <Card className={"w-full flex items-center justify-center py-2"}>
+      <div
+        className={`flex flex-col w-full ${
+          location.pathname != "/" ? "max-[888px]:hidden" : ""
+        }`}
+      >
+        <Link
+          to={`/schedule?toDay=${new Date().getDay() - 1}`}
+          className="p-2 min-[888px]:hidden"
+        >
+          <i className="fa-regular fa-calendar-days"></i> Расписание{" "}
+          <i className="fa-solid fa-chevron-right"></i>
+        </Link>
+        <Card
+          className={
+            "w-full flex items-center justify-center py-2 max-[1220px]:border-none max-[888px]:mt-2"
+          }
+        >
           <div className="spinner"></div>
         </Card>
       </div>
     );
 
   return (
-    <div className="min-w-[300px] top-0 max-md:min-w-0">
-      <Card>
-        <CardContent className="flex flex-col p-2 gap-2 relative">
+    <div
+      className={`min-w-[300px] top-0 max-md:min-w-0 ${
+        location.pathname != "/" ? "max-[888px]:hidden" : ""
+      }`}
+    >
+      <Link
+        to={`/schedule?toDay=${new Date().getDay() - 1}`}
+        className="p-2 min-[888px]:hidden"
+      >
+        <i className="fa-regular fa-calendar-days"></i> Расписание{" "}
+        <i className="fa-solid fa-chevron-right"></i>
+      </Link>
+      <Card className={"max-[1220px]:border-none max-[888px]:mt-2"}>
+        <CardContent className="flex flex-col p-2 gap-2 relative max-[1220px]:p-0">
           <Input
             placeholder={"Найти аниме по названию"}
             ref={searchInput}
             onChange={(e) => {
               setSearch(e.target.value);
             }}
+            className={"max-[1220px]:hidden"}
           />
           <div
             className={`transition-all flex flex-col absolute top-10 z-10 bg-primary-foreground w-[95%] left-[2.5%] p-1 rounded ${
-              search == "" ? "blur-3xl pointer-events-none opacity-30" : ""
-            }`}
+              search == "" ? "hide-a" : ""
+            } max-[1220px]:hidden`}
           >
             {searchFetching && (
               <div className="w-full flex items-center justify-center p-2">
-                <l-grid size="60" speed="1.5" color="red"></l-grid>
+                <div className="spinner"></div>
               </div>
             )}
             {!searchFetching &&
@@ -109,7 +138,7 @@ const UpdatesList = () => {
                   data={title}
                   torrentsUrl
                   key={i}
-                  className={`mb-2 ${i > 5 ? "md:hidden" : ""}`}
+                  className={`mb-2 ${i > 5 ? "min-[1220px]:hidden" : ""}`}
                 />
               );
             })}

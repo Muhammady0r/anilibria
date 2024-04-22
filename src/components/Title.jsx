@@ -212,7 +212,7 @@ const Title = () => {
         <CardContent className={"relative z-[1]"}>
           <Player data={data.data} />
         </CardContent>
-        <CardFooter className={`relative z-[1] `}>
+        {/* <CardFooter className={`relative z-[1] `}>
           <div
             className={`flex flex-col bg-muted w-full rounded overflow-hidden text-sm text-left`}
           >
@@ -251,10 +251,6 @@ const Title = () => {
                     {new Date(torrent.uploaded_timestamp * 1000).getMonth() + 1}
                     /{new Date(torrent.uploaded_timestamp * 1000).getDate()}/
                     {new Date(torrent.uploaded_timestamp * 1000).getFullYear()}
-                    {/* {new Date(torrent.uploaded_timestamp * 1000).getHours()}:
-                    {String(
-                      new Date(torrent.uploaded_timestamp * 1000).getMinutes()
-                    ).padStart(2, "0")} */}
                   </h1>
                   <div className="border-l-[1px] border-accent pl-2 flex justify-center items-center">
                     <Link to={"https://www.anilibria.tv/" + torrent.url}>
@@ -265,9 +261,9 @@ const Title = () => {
               );
             })}
           </div>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
-      <div className="grid grid-cols-3 gap-2 py-2">
+      <div className="grid grid-cols-3 gap-2 py-2 max-sm:flex max-[500px]:flex-col">
         <Link
           className="rounded overflow-hidden"
           to={"https://vk.com/anilibria"}
@@ -275,18 +271,17 @@ const Title = () => {
         >
           <img
             src="https://www.anilibria.tv/img/other/a1.jpg"
-            className="w-full"
+            className="w-full max-[500px]:h-14 object-cover"
             alt=""
           />
         </Link>
         <Link
           className="rounded overflow-hidden"
           to={"tg://resolve?domain=anilibria_tv"}
-          // target="_blank"
         >
           <img
             src="https://www.anilibria.tv/img/other/a2.jpg"
-            className="w-full"
+            className="w-full max-[500px]:h-14 object-cover"
             alt=""
           />
         </Link>
@@ -297,7 +292,7 @@ const Title = () => {
         >
           <img
             src="https://www.anilibria.tv/img/other/a3.jpg"
-            className="w-full"
+            className="w-full max-[500px]:h-14 object-cover"
             alt=""
           />
         </Link>

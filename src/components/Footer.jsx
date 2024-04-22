@@ -3,9 +3,9 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({ className }) => {
   return (
-    <div className="footer container mt-4">
+    <div className={`footer container mt-4 ${className}`}>
       <Card
         className={
           "p-4 grid grid-cols-3 max-md:flex flex-col max-md:gap-4 max-md:text-center max-md:justify-center max-md:items-center"

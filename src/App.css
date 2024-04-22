@@ -2,10 +2,10 @@
   padding-bottom: 8px;
 }
 
-* {
+/* {
   scroll-behavior: smooth;
-  /* user-select: none; */
-}
+  user-select: none;
+} */
 
 body {
   font-family: pt sans, sans-serif;
@@ -37,7 +37,33 @@ body {
     );
 }
 
-.yt-title {
+.title-card {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(9, 9, 11, 1) 30%
+  );
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+b,
+/* a, */
+li,
+/* span, */
+button,
+input {
+  text-shadow: 1px 1px 0 red, -1px -1px 0 black;
+}
+
+.yt-vid .yt-title {
+  transition: all 0.2s;
+  transform: translateY(50%);
+
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0) 40%,
@@ -45,22 +71,20 @@ body {
   );
 }
 
-.yt-vid > a > span {
-  transition: all 0.2s;
-  transform: translateY(50%);
-}
-
-.yt-vid:hover > a > span {
+.yt-vid:hover .yt-title {
   transform: translateY(0);
 }
 
-.yt-vid h1 {
-  text-shadow: 1px 1px 0px black, -1px -1px 0px black !important;
-}
-
 @media (max-width: 1220px) {
-  .yt-vid > a > span {
+  ::-webkit-scrollbar {
+    width: 0 !important;
+  }
+  .yt-vid .yt-title {
     transform: translateY(0);
+    position: relative;
+    background: none;
+    display: block;
+    padding: 8px 0 0 4px;
   }
   .app {
     display: flex !important;

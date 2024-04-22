@@ -44,10 +44,15 @@ const Schedule = () => {
 
   useEffect(() => {
     if (params.get("toDay") != undefined && isLoading == false) {
-      dayRefs[params.get("toDay")].current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      // console.log();
+      scrollBy(
+        0,
+        dayRefs[params.get("toDay")].current.getBoundingClientRect().y
+      );
+      // dayRefs[params.get("toDay")].current.scrollIntoView({
+      //   // behavior: "smooth",
+      //   block: "start",
+      // });
     }
   }, [isLoading]);
 
@@ -78,7 +83,7 @@ const Schedule = () => {
               </div>
               <div className="grid grid-cols-4 gap-3 max-md:grid-cols-3 max-sm:grid-cols-2">
                 {res.list.map((title, i) => {
-                  return <TitleCard data={title} torrentsUrl key={i} />;
+                  return <TitleCard data={title} key={i} />;
                 })}
               </div>
             </div>

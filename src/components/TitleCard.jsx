@@ -9,7 +9,7 @@ const TitleCard = ({ data, isHistory, className }) => {
 
   return (
     <div
-      className={`w-full rounded overflow-hidden transition-all ${className}`}
+      className={`w-full rounded overflow-hidden transition-all relative ${className}`}
     >
       <Link to={`/release/${data.code}`}>
         <img
@@ -20,34 +20,36 @@ const TitleCard = ({ data, isHistory, className }) => {
       </Link>
       <Link
         to={`/release/${data.code}`}
-        className="bg-muted p-2 flex flex-col items-center rounded-b"
+        className="title-card p-2 flex flex-col items-center absolute bottom-0 left-0 w-full"
       >
-        <h1 className="text-center">{data.names.ru}</h1>
+        <h1 className="text-center max-lg:text-sm max-[888px]:text-xs">
+          {data.names.ru}
+        </h1>
         <h2
           className={`${
             isHistory
               ? "text-sm flex justify-center items-center gap-1"
-              : "text-xs"
+              : "text-[10px]"
           }`}
         >
           Серия:
           {isHistory ? (
             <>
-              <span className="text-accent text-base font-bold">
+              <span className="text-red-400 font-bold">
                 {+localStorage.getItem(`${data.id}`) + 1}
               </span>
             </>
           ) : (
             data.player.episodes.string
           )}
+          {isHistory && (
+            <>
+              <span className="font-bold">
+                {timeConvert(+localStorage.getItem(`${data.id}played`))}
+              </span>
+            </>
+          )}
         </h2>
-        {isHistory && (
-          <>
-            <h2 className="text-sm text-accent font-bold">
-              {timeConvert(+localStorage.getItem(`${data.id}played`))}
-            </h2>
-          </>
-        )}
       </Link>
     </div>
   );

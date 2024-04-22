@@ -204,21 +204,19 @@ const Player = ({ data }) => {
             setConTimeout(
               setTimeout(() => {
                 setControls(false);
-              }, 3000)
+              }, 10000)
             );
           }}
-          onClick={() => {
-            clearTimeout(conTimeout);
-            setControls(true);
+          // onClick={() => {
+          //   clearTimeout(timeout);
+          //   setControls(true);
 
-            if (!playing) return;
+          //   if (!playing) return;
 
-            setConTimeout(
-              setTimeout(() => {
-                setControls(false);
-              }, 3000)
-            );
-          }}
+          //   timeout = setTimeout(() => {
+          //     setControls(false);
+          //   }, 5000);
+          // }}
         >
           <FullScreen
             handle={handleFS}
@@ -326,9 +324,6 @@ const Player = ({ data }) => {
 
               <div className={`${light ? "hidden" : ""}`}>
                 <div
-                  onClick={() => {
-                    setPlaying((prev) => !prev);
-                  }}
                   onDoubleClick={() => {
                     if (fullscreen) handleFS.exit();
                     else handleFS.enter();
@@ -709,7 +704,7 @@ const Player = ({ data }) => {
                 </div>
                 <Button
                   variant={"outline"}
-                  className={`absolute top-1 left-1/2 -translate-x-1/2 w-8 h-8 pointer-events-auto ${
+                  className={`absolute top-1 right-0 -translate-x-1/2 w-8 h-8 pointer-events-auto ${
                     controls ? "" : "hide-a"
                   }`}
                   onClick={() => {

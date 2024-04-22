@@ -21,7 +21,7 @@ const UpdCard = ({ data, torrentsUrl, className }) => {
       className={`upd-card max-h-[80vh] w-full rounded overflow-hidden transition-all ${
         window.location.pathname == `/release/${data.code}`
           ? "border-4 border-accent"
-          : "opacity-70 hover:opacity-100 md:"
+          : "opacity-70 hover:opacity-100 max-[888px]:opacity-100"
       } ${className}`}
     >
       <Link to={`/release/${data.code}`}>
@@ -40,7 +40,7 @@ const UpdCard = ({ data, torrentsUrl, className }) => {
           <h2>Серия: {data.player.episodes.string}</h2>
           <h2 className="text-xs">
             {date.getDate() + 1}/{`${date.getMonth() + 1}`.padStart(2, "0")}{" "}
-            <span className="text-accent">
+            <span className=" font-bold">
               {`${date.getHours()}`.padStart(2, "0")}:
               {`${date.getMinutes()}`.padStart(2, "0")}:
               {`${date.getSeconds()}`.padStart(2, "0")}

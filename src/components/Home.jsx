@@ -36,10 +36,12 @@ const Home = () => {
               <img
                 src={`https://www.anilibria.tv/${video.preview.src}`}
                 alt=""
-                className="w-full"
+                className="w-full rounded"
               />
               <span className="absolute left-0 bottom-0 h-1/2 w-full yt-title flex items-end p-2 justify-center">
-                <h1 className="text-sm text-center">{video.title}</h1>
+                <h1 className="min-[1220px]:text-sm min-[1220px]:text-center">
+                  {video.title}
+                </h1>
               </span>
             </Link>
           </div>

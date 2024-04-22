@@ -2,8 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
-import "ldrs/grid";
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { RocketIcon } from "@radix-ui/react-icons";
@@ -21,8 +19,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import Select from "react-select";
 
-import { Switch } from "@/components/ui/switch";
-import UpdCard from "./UpdCard/UpdCard";
 import { Button } from "./ui/button";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -36,8 +32,11 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import TitleCard from "./TitleCard";
+import { Input } from "./ui/input";
 
 const Releases = () => {
+  const [name, setName] = useState("");
+
   const [genres, setGenres] = useState([]);
   const [years, setYears] = useState([]);
   const seasons = [
@@ -68,7 +67,7 @@ const Releases = () => {
       const fetch = axios(
         `https://api.anilibria.tv/v3/title/search/advanced?query=${
           selectedYears.length < 1
-            ? "{season.year}>=1996"
+            ? "{season.year}>=2000"
             : `${selectedYears
                 .map(
                   (year, i) =>
@@ -197,7 +196,7 @@ const Releases = () => {
 
   function getPagination() {
     return (
-      <Pagination>
+      <Pagination className={"mt-2"}>
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
@@ -284,49 +283,60 @@ const Releases = () => {
     <div className="">
       <Alert className={"my-2"}>
         <RocketIcon className="h-4 w-4" />
-        <AlertTitle>
-          Cтраница ещё в разработке! (Надеюсь что уже нет 😑)
+        <AlertTitle className={"leading-[1.25]"}>
+          Cтраница ещё в разработке! (<del>Надеюсь что уже нет 😑</del> Похоже
+          всё ещё не закончил с этой страницей... 🗿)
         </AlertTitle>
       </Alert>
       <Card className={""}>
-        <CardHeader className="flex flex-row w-full gap-2 justify-between items-end max-md:flex-col">
-          <Select
-            options={genres}
+        <CardHeader className="">
+          <Input
+            placeholder={"Поиск по названию..."}
+            className={"mb-4 hover:border-white focus:border-muted"}
+            style={{ textShadow: "none" }}
             onChange={(e) => {
-              setSelGenres(e.map((res) => res.value));
+              setName(e.target.value);
             }}
-            styles={colorStyles}
-            isMulti
-            placeholder="Выбрать жанры"
-            className="w-[50%] my-react-select-container max-md:w-full"
-            classNamePrefix="my-react-select"
           />
-          <Select
-            options={years}
-            onChange={(e) => {
-              setSelYears(e.map((res) => res.value));
-            }}
-            styles={colorStyles}
-            isMulti
-            placeholder="Год"
-            className="w-[27.5%] my-react-select-container max-md:w-full"
-            classNamePrefix="my-react-select"
-          />
-          <Select
-            options={seasons}
-            onChange={(e) => {
-              setSelSeasons(e.map((res) => res.value));
-            }}
-            styles={colorStyles}
-            isMulti
-            placeholder="Сезон"
-            className="w-[22.5%] my-react-select-container max-md:w-full"
-            classNamePrefix="my-react-select"
-          />
+          <div className="flex flex-row w-full gap-2 justify-between items-end max-md:flex-col">
+            <Select
+              options={genres}
+              onChange={(e) => {
+                setSelGenres(e.map((res) => res.value));
+              }}
+              styles={colorStyles}
+              isMulti
+              placeholder="Выбрать жанры"
+              className="w-[50%] my-react-select-container max-md:w-full"
+              classNamePrefix="my-react-select"
+            />
+            <Select
+              options={years}
+              onChange={(e) => {
+                setSelYears(e.map((res) => res.value));
+              }}
+              styles={colorStyles}
+              isMulti
+              placeholder="Год"
+              className="w-[27.5%] my-react-select-container max-md:w-full"
+              classNamePrefix="my-react-select"
+            />
+            <Select
+              options={seasons}
+              onChange={(e) => {
+                setSelSeasons(e.map((res) => res.value));
+              }}
+              styles={colorStyles}
+              isMulti
+              placeholder="Сезон"
+              className="w-[22.5%] my-react-select-container max-md:w-full"
+              classNamePrefix="my-react-select"
+            />
+          </div>
         </CardHeader>
         <CardContent className="flex gap-6 max-md:gap-2 max-[480px]:flex-col">
           <div
-            className="relative bg-background p-2 pt-2.5 text-center overflow-hidden rounded border border-accent cursor-pointer select-none hover:bg-accent"
+            className="relative bg-background p-2 pt-2.5 text-center overflow-hidden rounded border border-muted cursor-pointer select-none hover:border-accent hover:bg-transparent"
             onClick={() => {
               setSort((prev) => !prev);
               setTimeout(refetch, 50);
@@ -335,7 +345,7 @@ const Releases = () => {
             <h1
               className={`absolute bg-background h-full w-full top-0 left-0 transition-all flex justify-center items-center ${
                 sortByFav ? "translate-x-full" : ""
-              } hover:bg-accent`}
+              }`}
             >
               Новые
             </h1>
@@ -344,7 +354,7 @@ const Releases = () => {
           <Button
             variant={"outline"}
             className={
-              "h-full p-2.5 border-accent rounded flex justify-center items-center gap-2 text-base"
+              "h-full p-2.5 rounded flex justify-center items-center gap-2 text-base hover:border-accent hover:bg-transparent"
             }
             onClick={refetch}
             disabled={isFetching}
@@ -360,7 +370,7 @@ const Releases = () => {
             )}
           </Button>
           <label
-            className={`bg-background p-2 text-center overflow-hidden rounded border border-accent cursor-pointer select-none flex justify-center items-center gap-2 hover:bg-red-600`}
+            className={`bg-background p-2 text-center overflow-hidden rounded border border-muted cursor-pointer select-none flex justify-center items-center gap-2 hover:border-accent hover:bg-transparent`}
             htmlFor="finished"
           >
             <Checkbox
@@ -374,7 +384,6 @@ const Releases = () => {
           </label>
         </CardContent>
       </Card>
-      <br />
       {getPagination()}
       <div
         className={`grid grid-cols-3 py-2 gap-2 transition-all max-md:grid-cols-2 ${
@@ -382,7 +391,13 @@ const Releases = () => {
         }`}
       >
         {data?.data?.list?.map((title, i) => {
-          return <TitleCard data={title} key={i} />;
+          return name.length > 0 ? (
+            name.toLowerCase() in title.names.ru.toLowerCase() ? (
+              title.names.ru
+            ) : null
+          ) : (
+            <TitleCard data={title} key={i} />
+          );
         })}
       </div>
       {getPagination()}

@@ -70,11 +70,11 @@
 
 @layer components {
   .my-react-select-container .my-react-select__control {
-    @apply bg-background border border-accent;
+    @apply bg-background border border-muted;
   }
 
   .my-react-select-container .my-react-select__control--is-focused {
-    @apply border-secondary hover:border-secondary shadow-none;
+    @apply border-secondary hover:border-accent shadow-none;
   }
 
   .my-react-select-container .my-react-select__menu {

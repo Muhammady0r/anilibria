@@ -40,23 +40,24 @@
 
 @media (max-width: 1220px) {
   .upd-card {
-    min-width: 250px;
+    min-width: 200px;
     border: none !important;
     .upd-overlay {
-      border: none;
-      transform: scale(0.95);
-      pointer-events: none;
-      opacity: 1;
-      top: auto;
-      height: 30% !important;
-      bottom: 0;
-      height: auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      p {
-        display: none;
-      }
+      display: none;
+      // border: none;
+      // transform: scale(0.95);
+      // pointer-events: none;
+      // opacity: 1;
+      // top: auto;
+      // height: 30% !important;
+      // bottom: 0;
+      // height: auto;
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      // p {
+      //   display: none;
+      // }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import UpdatesList from "./components/UpdatesList";
@@ -31,13 +31,19 @@ import {
 } from "@/components/ui/dialog";
 
 function App() {
+  const loc = useLocation();
+
+  // window.onscroll = (e) => {
+  //   console.log(window.scrollY);
+  // };
+
   return (
     <>
       <div className="container relative ">
         <img
           src="https://www.anilibria.tv/img/29.png"
           alt=""
-          className="w-full"
+          className={`w-full `}
         />
         <Alert className={"mt-2 rounded border-accent w-full"}>
           <RocketIcon className="h-4 w-4" />
@@ -65,7 +71,7 @@ function App() {
                       navigator.clipboard.writeText(
                         "https://www.anilibria.tv/"
                       );
-                      toast(`Copied `);
+                      toast(`Скопировано!`);
                     }}
                   >
                     Anilibria.tv
@@ -104,7 +110,7 @@ function App() {
                     className={"text-center cursor-pointer"}
                     onClick={() => {
                       navigator.clipboard.writeText("@Meed0ff");
-                      toast(`Copied `);
+                      toast(`Скопировано!`);
                     }}
                   >
                     @Meed0ff
@@ -128,7 +134,11 @@ function App() {
         </Alert>
       </div>
 
-      <div className="app container grid mt-2 gap-2">
+      <div
+        className={`app container grid ${
+          loc.pathname == "/donate" ? "min-[888px]:mt-2" : "mt-2"
+        } gap-2`}
+      >
         <div className="max-[1220px]:order-1">
           <Header />
           <div className="w-full mb-2"></div>
@@ -145,7 +155,7 @@ function App() {
         </div>
         <UpdatesList />
       </div>
-      <Footer />
+      <Footer className={``} />
       <SpeedInsights />
       <Toaster />
     </>
