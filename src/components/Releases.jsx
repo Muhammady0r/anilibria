@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -20,7 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Select from "react-select";
 
 import { Button } from "./ui/button";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import {
   Pagination,
@@ -33,9 +33,11 @@ import {
 } from "@/components/ui/pagination";
 import TitleCard from "./TitleCard";
 import { Input } from "./ui/input";
+import { DropdownMenuSeparator } from "./ui/dropdown-menu";
 
 const Releases = () => {
-  const [name, setName] = useState("");
+  const [search, setSearch] = useState("");
+  const searchInput = useRef(null);
 
   const [genres, setGenres] = useState([]);
   const [years, setYears] = useState([]);
@@ -114,6 +116,21 @@ const Releases = () => {
   useEffect(() => {
     refetch();
   }, [page]);
+
+  const {
+    data: searchData,
+    // isLoading: searchLoading,
+    isFetching: searchFetching,
+    refetch: research,
+  } = useQuery("search", () => {
+    return axios(
+      `https://api.anilibria.tv/v3/title/search?search=${search}&items_per_page=10`
+    );
+  });
+
+  useEffect(() => {
+    research();
+  }, [search]);
 
   const { data: yearsData, isLoading: yearsLoading } = useQuery("years", () => {
     return axios("https://api.anilibria.tv/v3/years");
@@ -289,15 +306,45 @@ const Releases = () => {
         </AlertTitle>
       </Alert>
       <Card className={""}>
-        <CardHeader className="">
+        <CardHeader className="relative">
           <Input
-            placeholder={"Поиск по названию..."}
-            className={"mb-4 hover:border-white focus:border-muted"}
-            style={{ textShadow: "none" }}
+            placeholder={"Найти аниме по названию"}
+            ref={searchInput}
             onChange={(e) => {
-              setName(e.target.value);
+              setSearch(e.target.value);
             }}
+            className={"min-[1220px]:hidden mb-4"}
           />
+          <div
+            className={`transition-all flex flex-col absolute top-14 z-10 bg-primary-foreground w-[95%] left-[2.5%] p-1 rounded ${
+              search == "" ? "hide-a" : ""
+            } min-[1220px]:hidden`}
+          >
+            {searchFetching && (
+              <div className="w-full flex items-center justify-center p-2">
+                <div className="spinner"></div>
+              </div>
+            )}
+            {!searchFetching &&
+              searchData.data.list.map((title, i) => {
+                return (
+                  <div className="flex flex-col" key={i}>
+                    <Link
+                      className="p-1 hover:bg-accent hover:rounded-md transition-all"
+                      to={`/release/${title.code}`}
+                      onClick={() => {
+                        searchInput.current.value = "";
+                        setSearch("");
+                        research();
+                      }}
+                    >
+                      {title.names.ru}
+                    </Link>
+                    <DropdownMenuSeparator />
+                  </div>
+                );
+              })}
+          </div>
           <div className="flex flex-row w-full gap-2 justify-between items-end max-md:flex-col">
             <Select
               options={genres}

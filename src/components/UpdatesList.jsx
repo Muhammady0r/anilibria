@@ -121,7 +121,7 @@ const UpdatesList = () => {
                       onClick={() => {
                         searchInput.current.value = "";
                         setSearch("");
-                        research();
+                        // research();
                       }}
                     >
                       {title.names.ru}
