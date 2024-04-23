@@ -180,7 +180,7 @@ const Title = () => {
             )}
           </div>
           <div className="relative rounded overflow-hidden max-md:h-[400px] max-md:overflow-visible">
-            <div
+            <Link
               className={`absolute m-[2%] w-[96%] backdrop-blur-lg p-1 text-center rounded max-md:w-full max-md:m-0 max-md:mt-[1px] max-md:left-1/2 max-md:-translate-x-1/2 ${
                 data.data.announce == null ? "cursor-pointer" : ""
               } ${data.data.status.code == 2 ? "hidden" : ""}`}
@@ -197,11 +197,11 @@ const Title = () => {
               )) || (
                 <>
                   <p>
-                    Новая серия каждое {weekdays[data.data.season.week_day]}
+                    Новая серия каждый {weekdays[data.data.season.week_day]}
                   </p>
                 </>
               )}
-            </div>
+            </Link>
             <img
               src={`https://www.anilibria.tv/${data.data.posters.original.url}`}
               alt=""
